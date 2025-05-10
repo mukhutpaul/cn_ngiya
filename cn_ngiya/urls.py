@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app_centre.views import addpaiement, aprenant, formateur, formation, fpaiement, frais, home, local, log_out, login, matiere, paiement, print_recu, sign_in
+from app_centre.views import addpaiement, aprenant, deletePaie, formateur, formation, fpaiement, frais, home, local, log_out, login, matiere, paiement, print_recu, sign_in
 
 
 urlpatterns = [
@@ -41,6 +41,10 @@ urlpatterns = [
    #Formulaires paie
    path('fpaiement/', fpaiement, name="fpaiement"),
    path('addpaiement/', addpaiement, name="addpaiement"),
+   
+   #Delete paie
+   path('deletePaie<int:id>/',deletePaie, name="deletePaie"),
+   
    
    
    

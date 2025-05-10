@@ -359,6 +359,8 @@ def addpaiement(request):
                         
                     elif sm > frss.cout:
                          msg = "Le montant inscrit est supérieur au solde resté pour ce frais"
+                    elif int(montant)>frss.cout:
+                        msg = "Le montant inscrit est supérieur au coût de ce frais"
                          
                     else:
                         #frs = Frais.objects.get(pk=frais_id)
@@ -375,4 +377,10 @@ def addpaiement(request):
         
             
     return render(request,'formulaire/FPaiement.html',{'msg':msg,'frs': frs,'apr': apr})
+
+#Delete paie
+def deletePaie(request,id):
+    p = Paiement.objects.get(pk=id)
+    p.delete()
+    return HttpResponseRedirect('/paie/')
 
