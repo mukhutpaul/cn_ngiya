@@ -385,6 +385,84 @@ def deletePaie(request,id):
     p.delete()
     return HttpResponseRedirect('/paie/')
 
+
+##Formulaire Matière
+@login_required(login_url="sign_in")
+def fmatiere(request):
+    
+    
+    return render(request,'formulaire/FMatiere.html')
+
+##ADD MATIERES
+def addMatiere(request):
+   
+    if request.method == 'POST':
+        msg = None
+        designat = request.POST.get("matiere",None)
+        hr = request.POST.get("heure",None)
+        
+        if designat == '':
+            msg ="Veuillez remplir la désignation"
+        elif hr == '':
+            msg ="Veuillez remplir le volume horaire"
+        else:
+            mt = Matiere(
+                designation = designat,
+                nombreHeure = hr
+            )
+            mt.save()
+            return HttpResponseRedirect('/matiere/')
+    ctx ={
+        'msg':msg
+    }
+    return render(request,'FMatiere.html',ctx)
+
+
+###APPRENANT FORMULAIRES
+
+@login_required(login_url="sign_in")
+def fAprenant(request):
+    
+    
+    return render(request,'formulaire/FAprenant.html')
+
+##ADD MATIERES
+def addMatiere(request):
+   
+    if request.method == 'POST':
+        msg = None
+        nom = request.POST.get("nom",None)
+        postnom = request.POST.get("postnom",None)
+        prenom = request.POST.get("prenom",None)
+        lieu = request.POST.get("lieu",None)
+        datenais = request.POST.get("datenais",None)
+        langue = request.POST.get("langue",None)
+        etatciv = request.POST.get("etatciv",None)
+        postnom = request.POST.get("postnom",None)
+        postnom = request.POST.get("postnom",None)
+        postnom = request.POST.get("postnom",None)
+        
+        
+        
+        
+        if designat == '':
+            msg ="Veuillez remplir la désignation"
+        elif hr == '':
+            msg ="Veuillez remplir le volume horaire"
+        else:
+            mt = Matiere(
+                designation = designat,
+                nombreHeure = hr
+            )
+            mt.save()
+            return HttpResponseRedirect('/matiere/')
+    ctx ={
+        'msg':msg
+    }
+    return render(request,'FMatiere.html',ctx)
+     
+        
+
 #Gestion Présences
 
 @login_required(login_url="sign_in")

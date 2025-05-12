@@ -10,12 +10,12 @@
                 <h4 class="card-title" >Gestion des aprenants</h4>
                 
               </div>
-              <a href="" class="btn btn-inverse-success mr-2">Ajouter un aprenant</a>
+              <a href="{% url 'fAprenant' %}" class="btn btn-inverse-success mr-2">Ajouter un aprenant</a>
               <nav aria-label="breadcrumb">
                 <form action="" method="post" class="forms-sample breadcrumb">
                   {% csrf_token %}
                   <div class="form-group">
-                    <input type="text" class="form-control" name="rech" id="rech" placeholder="Recherche ...">
+                    <input type="text" style="color:white" class="form-control" name="rech" id="rech" placeholder="Recherche ...">
                   </div>
                 </form>
               </nav>

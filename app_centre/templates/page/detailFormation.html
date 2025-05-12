@@ -17,7 +17,7 @@
                   <input hidden value="{{sel_formation.id}}" name ="formation">
                     <div class="form-group"> 
                         <select class="js-example-basic-single" style="width:100%" name="matiere">
-                          <option value="">--------------</option>
+                          <option value="">Choisir la matiere</option>
                           {% for m in matieres %}
                           <option value="{{m.id}}">{{m.designation}}</option>
                           {% endfor %}
@@ -28,7 +28,7 @@
             <div class="col-6">
               <div class="form-group"> 
                         <select class="js-example-basic-single" style="width:100%" name="formateur">
-                          <option value="">--------------</option>
+                          <option value="">Choisir le formateur</option>
                           {% for f in formateurs %}
                           <option value="{{f.id}}">{{f.nom}} {{f.postnom}} {{f.prenom}}</option>
                           {% endfor %}

@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Formulaire d'ajout d'un aprenant</h4>
+        <p class="card-description"> Information </p>
+        <form class="forms-sample" method="post" action="{% url 'addMatiere' %}">
+            {% csrf_token %}
+        <div class="row">
+            <div class="col-6">
+                   
+                   <div class="form-group">
+                    <label for="exampleInputCity1">Nom</label>
+                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="nom" name="nom">
+                  </div>
+
+                   <div class="form-group">
+                    <label for="exampleInputCity1">Post-Nom</label>
+                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="post-nom" name="postnom">
+                  </div>
+
+                   <div class="form-group">
+                    <label for="exampleInputCity1">Prenom</label>
+                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="prénom" name="prenom">
+                  </div>
+
+                   <div class="form-group">
+                    <label for="exampleInputCity1">Lieu de naissance</label>
+                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="lieu de naissance" name="lieu">
+                  </div>
+
+                   <div class="form-group">
+                    <label for="exampleInputCity1">Date Naissance</label>
+                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Date Naissance" name="datenais">
+                  </div>
+
+                <div class="form-group">
+                 <label>Langue</label>
+                    <select class="js-example-basic-single" style="width:100%" name="langue">
+                    <option value="">--------------</option>
+                    <option value="M">HOMME</option> 
+                    <option value="F">FEMME</option> 
+                   
+                    </select>
+                  </div>
+            </div>
+
+            <div class="col-6">
+                  <div class="form-group">
+                    <label for="exampleInputCity1">Etat civil</label>
+                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Etat civil" name="etatciv">
+                  </div>
+                
+                   <div class="form-group">
+                    <label for="exampleInputCity1">Niveau D'étude</label>
+                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Niveau d'étude" name="niveau">
+                  </div>
+
+                   <div class="form-group">
+                    <label for="exampleInputCity1">E-mail</label>
+                    <input type="mail" style="color:white" class="form-control" id="exampleInputCity1" placeholder="email" name="email">
+                  </div>
+
+                   <div class="form-group">
+                    <label for="exampleInputCity1">Téléphone</label>
+                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="téléphone" name="telephone">
+                  </div>
+                <div class="form-group">
+                 <label>Langue</label>
+                    <select class="js-example-basic-single" style="width:100%" name="langue">
+                    <option value="">--------------</option>
+                    <option value="FRANCAIS">FRANCAIS</option> 
+                    <option value="FRANCAIS">ANGLAIS</option> 
+                    <option value="AUTRES">AUTRES</option> 
+                    </select>
+                  </div>
+     
+               {% if msg %}
+               <div class="form-group">
+                <label class="badge badge-danger">{{msg}}</label>
+               </div>
+               {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="exampleTextarea1">Adresse</label>
+            <textarea class="form-control" style="color:white" id="exampleTextarea1" name="adresse" rows="4"></textarea>
+        </div>
+
+          <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
+          <button class="btn btn-dark">Annuler</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

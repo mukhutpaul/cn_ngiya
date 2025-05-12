@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Formulaire d'ajout de matière</h4>
+        <p class="card-description"> Information </p>
+        <form class="forms-sample" method="post" action="{% url 'addMatiere' %}">
+            {% csrf_token %}
+        <div class="row">
+            <div class="col-6">
+                    
+                    
+                   <div class="form-group">
+                    <label for="exampleInputCity1">Designation</label>
+                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Matière" name="matiere">
+                  </div>
+            </div>
+
+            <div class="col-6">
+              <div class="form-group">
+                    <label for="exampleInputCity1">Volume Horaire</label>
+                    <input type="number" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Volume horaire" name="heure">
+                </div>
+               {% if msg %}
+               <div class="form-group">
+                <label class="badge badge-danger">{{msg}}</label>
+               </div>
+               {% endif %}
+            </div>
+        </div>
+
+          <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
+          <button class="btn btn-dark">Annuler</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
