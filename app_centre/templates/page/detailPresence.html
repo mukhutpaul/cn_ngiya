@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Présence du : {{sel_presence.createdat}}</h4>
+        <p class="card-description"> Formation : {{sel_presence.formation.designaion}} </p>
+        <p class="card-description"> Matière : {{sel_presence.matiere.designation}} </p>
+        <label>Aprenant</label>
+        <form class="forms-sample" method="post" action="{% url 'addDetailPresence' %}">
+            {% csrf_token %}
+        <div class="row">
+            <div class="col-6">
+                    <div class="form-group">
+                        
+                        <select class="js-example-basic-single" style="width:100%" name="aprenant">
+                          <option value="">--------------</option>
+                          {% for a in liste_aprenant %}
+                          <option value="{{a.id}}">{{a.noms}}</option>
+                          {% endfor %}
+                        </select>
+                   </div>
+            </div>
+
+            <div class="col-6">
+              <div class="row">
+              <div class="col-3">
+               <input type="text" name="presence" value="{{sel_presence.id}}" hidden class="form-control" style="color:white" id="exampleInputCity1">
+              <div class="form-group">
+                    <input type="text" name="harrive" class="form-control" style="color:white" id="exampleInputCity1" placeholder="H Arrivée">
+              </div>
+              </div>
+              <div class="col-3">
+              <div class="form-group">
+                    <input type="text" class="form-control" style="color:white" id="exampleInputCity1" placeholder="H départ" name="hdepart">
+              </div>
+              </div>
+            </div>
+
+                 <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
+                 <button class="btn btn-dark">Annuler</button><br> <br>
+               {% if msg %}
+               <div class="form-group">
+                <label style="color:red">{{msg}}</label>
+               </div>
+               {% endif %}
+            </div>
+          </div>
+         </form>
+        {% if list_detailp %}
+        <div class="row">
+          <div class="" style="margin:-10px">
+              <form action="" method="post" class="forms-sample breadcrumb">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <input type="text" style ="color:white" class="form-control" name="rech" id="rech" placeholder="Recherche ...">
+                  </div>
+                </form>
+          </div>
+
+        </div>
+        <div class="table-responsive">
+          <table class="table table-striped" style ="color:white">
+            <thead>
+              <tr>
+                <th> Id </th>
+                <th> Aprenant </th>
+                <th> Presence </th>
+                <th> Heure Arrivée </th>
+                <th> Heure Départ </th>
+                <th> Actions </th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for d in list_detailp %}
+              <tr>
+                <td class="py-1">
+                {{d.id}}
+                </td>
+                <td> {{d.aprenant}} </td>
+                <td>
+                     {{d.Presence.createdat}} 
+                </td>
+                <td> {{d.heurArrive}}  </td>
+                <td> {{d.heurDepart}} </td>
+                <td>
+                    <a href="" onclick="return confirm('Etes-vous sûr de vouloir supprimer?')"> <i class="mdi mdi-delete"></i></a>
+                    <a href=""><i class="mdi mdi-table-edit"></i></a>
+                </td>
+               
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <br>
+          {% if list_detailp.has_previous %}
+                <a href="?page=1">&laquo;</a>
+                <a href="?page={{ list_detailp.previous_page_number }}"><span class="badge badge-info ">Précédent</span></a>
+          {% endif %}
+                page {{ list_detailp.number }} sur {{ list_detailp.paginator.num_pages }}
+                <span class="badge badge-info pull-right">{{compte}}</span>
+          
+                {% if list_detailp.has_next %}
+                   <a href="?page={{ list_detailp.next_page_number }}"><span class="badge badge-info ">Suivant</span></a>
+                   <a href="?page={{compte}}">&raquo;</a>
+                {% else %}
+                {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

@@ -60,7 +60,7 @@ class Formation(models.Model):
     
 class Local(models.Model):
     designation = models.CharField(max_length=100,null=False)
-    capacité = models.IntegerField()
+    capacite = models.IntegerField()
     createdat = models.DateTimeField(auto_now=True)
     
     def __str__(self):
@@ -74,7 +74,7 @@ class SessionFormation(models.Model):
     createdat = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return self.designation,"-",self.dateDebut,"-",self.dateFin
+        return self.designation+"-"+self.dateDebut+"-"+self.dateFin
     
 class AffectationFormation(models.Model):
     sponsoriser = models.BooleanField(default=False)
@@ -106,13 +106,23 @@ class Paiement(models.Model):
         return self.id
     
 class Presence(models.Model):
-    aprenant = models.ForeignKey(Aprenant,on_delete=models.DO_NOTHING)
-    present = models.BooleanField(default=False)
-    matieres = models.CharField(models.CharField)
+    formation = models.ForeignKey(Formation,on_delete=models.DO_NOTHING)
+    matiere = models.ForeignKey(Matiere,on_delete=models.DO_NOTHING)
+    sesion = models.ForeignKey(SessionFormation,on_delete=models.DO_NOTHING)
     createdat = models.DateTimeField(auto_now=True)
     
-    def __init__(self):
-        return self.aprenant,"-", self.matieres
+    def __int__(self):
+        return self.formation+"-"+self.matiere+"-"+self.sesion
+    
+class DetailPresence(models.Model):
+    aprenant = models.ForeignKey(Aprenant,on_delete=models.DO_NOTHING)
+    Presence = models.ForeignKey(Presence,on_delete=models.DO_NOTHING)
+    heurArrive = models.CharField(max_length=10)
+    heurDepart = models.CharField(max_length=10)
+    createdat = models.DateTimeField(auto_now=True)
+    
+    def __int__(self):
+        return self.aprenant.nom+"-"+self.presence
     
 
 #UTILISATEURS

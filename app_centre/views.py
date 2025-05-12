@@ -7,7 +7,7 @@ import qrcode
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login as auth_login, logout
 
-from app_centre.models import Aprenant, Formateur, Formation, Frais, Local, Matiere, Paiement, User
+from app_centre.models import AffectationFormation, Aprenant, DetailPresence, Formateur, Formation, Frais, Local, Matiere, Paiement, Presence, SessionFormation, User
 from django.core.paginator import Paginator
 
 from app_centre.utils import render_to_pdf
@@ -41,7 +41,7 @@ def aprenant(request):
              compte = len(Aprenant.objects.all())  
         
     else:
-        p = Paginator(Aprenant.objects.all(), 20)
+        p = Paginator(Aprenant.objects.all().order_by('-id'), 20)
         page = request.GET.get('page')
         pages =p.get_page(page)
         compte = len(Aprenant.objects.all())
@@ -160,6 +160,7 @@ def local(request):
 
 @login_required(login_url="sign_in")
 def frais(request):
+
     locaux = len(Frais.objects.all())
     if request.method == "POST":
         rech = request.POST['rech']
@@ -358,7 +359,7 @@ def addpaiement(request):
                         msg = "Cet aprenant a déjà soldé ce frais"
                         
                     elif sm > frss.cout:
-                         msg = "Le montant inscrit est supérieur au solde resté pour ce frais"
+                         msg = "Le montant inscrit est supérieur au solde restant pour ce frais"
                     elif int(montant)>frss.cout:
                         msg = "Le montant inscrit est supérieur au coût de ce frais"
                          
@@ -383,4 +384,183 @@ def deletePaie(request,id):
     p = Paiement.objects.get(pk=id)
     p.delete()
     return HttpResponseRedirect('/paie/')
+
+#Gestion Présences
+
+@login_required(login_url="sign_in")
+def presence(request):
+    if request.method == "POST":
+        rech = request.POST['rech']
+        p = Paginator(Presence.objects.filter(formation__designaion__contains=rech) |
+        Presence.objects.filter(matiere__designation__contains=rech) |
+        Presence.objects.filter(createdat__contains=rech),20)
+        page = request.GET.get('page')
+        pages =p.get_page(page)
+        compte = len(pages)
+        if rech == '':
+             compte = len(Presence.objects.all())  
+        
+    else:
+        p = Paginator(Presence.objects.all(), 20)
+        page = request.GET.get('page')
+        pages =p.get_page(page)
+        compte = len(Presence.objects.all())
+    ctx = {
+        'compte' : compte,
+        'pres' : pages,
+        'lpres': 'active',
+        'pages':pages
+    }
+    return render(request,'page/presence.html',ctx)
+
+#Details présence
+
+def detaiPresence(request,id):
+    sel_presence = Presence.objects.get(id = id)
+    liste_aprenant = Aprenant.objects.all()
+    
+    
+    data =[]
+    #for prs in pres:
+    #apreAff = AffectationFormation.objects.filter(formation=prs.formation,session=prs.sesion)
+    dpres = AffectationFormation.objects.filter()
+    
+    for d in dpres:
+        pres = Presence.objects.filter(formation=d.formation,sesion=d.session,id=sel_presence.id)
+        #for p in pres:
+        if pres :
+            list_sans_prs = DetailPresence.objects.filter(aprenant_id=d.aprenant.id,Presence_id=sel_presence.id) 
+            
+            if list_sans_prs:
+                pass
+            else:
+                data.append(
+                    {
+                        'id': d.aprenant.id,
+                        'noms': d.aprenant
+                    }
+                )
+            print("#####",d.aprenant)
+        else :
+            pass
+            #print("#####",d.aprenant)
+            
+
+    if request.method == "POST":
+        rech = request.POST['rech']
+        p = Paginator(DetailPresence.objects.filter(aprenant__nom__contains=rech,Presence_id=sel_presence.id) |
+        DetailPresence.objects.filter(aprenant__postnom__contains=rech,Presence_id=sel_presence.id) |
+        DetailPresence.objects.filter(Presence__createdat__contains=rech,Presence_id=sel_presence.id),20)
+        page = request.GET.get('page')
+        list_detailp =p.get_page(page)
+        compte = len(list_detailp)
+        if rech == '':
+             compte = len(DetailPresence.objects.filter(Presence_id=sel_presence.id))  
+        
+    else:
+        p = Paginator(DetailPresence.objects.filter(Presence_id=sel_presence.id), 20)
+        page = request.GET.get('page')
+        list_detailp =p.get_page(page)
+        compte = len(DetailPresence.objects.filter(Presence_id=sel_presence.id))
+    
+    ctx = {
+        'sel_presence': sel_presence,
+        'liste_aprenant': data,
+        'list_detailp': list_detailp,
+        'lpresence': 'active',
+        'compte':compte
+    }
+    return render(request,'page/detailPresence.html',ctx)
+
+def addDetailPresence(request):
+    if request.method == 'POST':
+        msg = None
+        harrive = request.POST.get("harrive",None)
+        hdepart = request.POST.get("hdepart",None)
+        aprenant = request.POST.get("aprenant",None)
+        presence = request.POST.get("presence",None)
+        print("#############",presence)
+        if harrive =='':
+            msg = "Veuillez saisir l'heure d'arrivée"
+        elif  hdepart=='':
+            msg="Veuillez saisir l'heure départ"
+        elif aprenant == '':
+            msg="Veuillez choisir l'aprenant"
+
+        else:
+            apr = Aprenant.objects.get(pk=aprenant)
+            prs = Presence.objects.get(pk=presence)
+            ap = DetailPresence(
+                    aprenant = apr,
+                    Presence =prs ,
+                    heurArrive = harrive,
+                    heurDepart = hdepart
+                            ) 
+            ap.save()
+            return HttpResponseRedirect('/detaiPresence'+presence)
+    return HttpResponseRedirect('/detaiPresence'+presence)
+
+#Detail Aprenant
+def detailAprenant(request,id):
+    sel_aprenant = Aprenant.objects.get(id = id)
+    #liste_formationD = AffectationFormation.objects.all()
+    formations = Formation.objects.all()
+    sessions = SessionFormation.objects.all()
+    
+
+
+    if request.method == "POST":
+        rech = request.POST['rech']
+        p = Paginator(AffectationFormation.objects.filter(aprenant__nom__contains=rech,aprenant__id=sel_aprenant.id) |
+        AffectationFormation.objects.filter(aprenant__postnom__contains=rech,aprenant__id=sel_aprenant.id) |
+        AffectationFormation.objects.filter(session__designation__contains=rech,aprenant__id=sel_aprenant.id),20)
+        page = request.GET.get('page')
+        list_detailA =p.get_page(page)
+        compte = len(list_detailA)
+        if rech == '':
+             compte = len(AffectationFormation.objects.filter(aprenant__id=sel_aprenant.id))  
+        
+    else:
+        p = Paginator(AffectationFormation.objects.filter(aprenant__id=sel_aprenant.id), 20)
+        page = request.GET.get('page')
+        list_detailA =p.get_page(page)
+        compte = len(AffectationFormation.objects.all())
+    
+    ctx = {
+        'sel_aprenant': sel_aprenant,
+        'list_detailA': list_detailA,
+        'laff': 'active',
+        'formations':formations,
+        'sessions': sessions,
+        'compte':compte
+    }
+    return render(request,'page/detailAprenant.html',ctx)
+
+##ADD DETALS APRENANT
+def addDetailAprenant(request):
+    if request.method == 'POST':
+        msg = None
+        session = request.POST.get("session",None)
+        formation = request.POST.get("formation",None)
+        sponsor = request.POST.get("sponsor",None)
+        aprenant = request.POST.get("aprenant",None)
+        print("#############",aprenant )
+        if session =='':
+            msg = "Veuillez choisir la session"
+        elif  formation=='':
+            msg="Veuillez choisir formation"
+       
+        else:
+            apr = Aprenant.objects.get(pk=aprenant)
+            ses = SessionFormation.objects.get(pk=session)
+            form = Formation.objects.get(pk=formation)
+            ap = AffectationFormation(
+                sponsoriser = sponsor,
+                aprenant = apr,
+                session = ses,
+                formation = form
+                            ) 
+            ap.save()
+            return HttpResponseRedirect('/detailAprenant'+aprenant)
+    return HttpResponseRedirect('/detailAprenant'+aprenant)
 

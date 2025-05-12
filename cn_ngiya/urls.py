@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app_centre.views import addpaiement, aprenant, deletePaie, formateur, formation, fpaiement, frais, home, local, log_out, login, matiere, paiement, print_recu, sign_in
+from app_centre.views import addDetailAprenant, addDetailPresence, addpaiement, aprenant, deletePaie, detaiPresence, detailAprenant, formateur, formation, fpaiement, frais, home, local, log_out, login, matiere, paiement, presence, print_recu, sign_in
 
 
 urlpatterns = [
@@ -44,6 +44,14 @@ urlpatterns = [
    
    #Delete paie
    path('deletePaie<int:id>/',deletePaie, name="deletePaie"),
+   path('presence/',presence, name="presence"),
+   path('addDetailPresence/',addDetailPresence, name="addDetailPresence"),
+   
+   path('detaiPresence<int:id>/',detaiPresence, name="detaiPresence"),
+   path('detailAprenant<int:id>/',detailAprenant, name="detailAprenant"),
+   
+   path('addDetailAprenant/',addDetailAprenant, name="addDetailAprenant"),
+   
    
    
    

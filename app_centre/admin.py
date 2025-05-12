@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from django.db import models
 
-from app_centre.models import AffectationFormation, Aprenant, Formation, Matiere,Formateur,Local, Profile,SessionFormation,Frais,Paiement, User
+from app_centre.models import AffectationFormation, Aprenant, DetailPresence, Formation, Matiere,Formateur,Local, Presence, Profile,SessionFormation,Frais,Paiement, User
 
 # Create your models here.
 
@@ -18,6 +18,11 @@ admin.site.register(Frais)
 admin.site.register(Paiement)
 admin.site.register(User)
 admin.site.register(Profile)
+admin.site.register(Presence)
+admin.site.register(DetailPresence)
+
+
+
   
     
 
