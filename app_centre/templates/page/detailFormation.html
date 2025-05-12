@@ -10,7 +10,7 @@
         <p class="card-description"> Durée : {{sel_formation.duree}} </p>
         <p class="card-description"> Date de création : {{sel_formation.createdat}} </p>
         <label>Matière</label>
-        <form class="forms-sample" method="post" action="{% url 'addDetailPresence' %}">
+        <form class="forms-sample" method="post" action="{% url 'addFormation' %}">
             {% csrf_token %}
         <div class="row">
             <div class="col-6">
@@ -45,7 +45,7 @@
             </div>
           </div>
          </form>
-        {% if list_detailp %}
+        {% if list_detailFa %}
         <div class="row">
           <div class="" style="margin:-10px">
               <form action="" method="post" class="forms-sample breadcrumb">

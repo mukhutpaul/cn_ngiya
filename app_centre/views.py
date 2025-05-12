@@ -626,7 +626,7 @@ def addFormation(request):
             df = DetailFormation(
                 matiere = matr,
                 formation = form,
-                fomateur = format
+                formateur = format
             ) 
             df.save()
             return HttpResponseRedirect('/detailFormation'+formation)
