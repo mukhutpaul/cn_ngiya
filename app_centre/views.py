@@ -7,7 +7,7 @@ import qrcode
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login as auth_login, logout
 
-from app_centre.models import AffectationFormation, Aprenant, DetailPresence, Formateur, Formation, Frais, Local, Matiere, Paiement, Presence, SessionFormation, User
+from app_centre.models import AffectationFormation, Aprenant, DetailFormation, DetailPresence, Formateur, Formation, Frais, Local, Matiere, Paiement, Presence, SessionFormation, User
 from django.core.paginator import Paginator
 
 from app_centre.utils import render_to_pdf
@@ -563,4 +563,73 @@ def addDetailAprenant(request):
             ap.save()
             return HttpResponseRedirect('/detailAprenant'+aprenant)
     return HttpResponseRedirect('/detailAprenant'+aprenant)
+
+
+##DETAIL FORMATIONS
+
+def detailFormation(request,id):
+    sel_formation = Formation.objects.get(id = id)
+    #liste_formationD = AffectationFormation.objects.all()
+    matieres = Matiere.objects.all()
+    formateurs = Formateur.objects.all()
+    
+    if request.method == "POST":
+        rech = request.POST['rech']
+        p = Paginator(DetailFormation.objects.filter(matiere__designaion__contains=rech,formation__id=sel_formation.id) |
+        DetailFormation.objects.filter(formateur__nom__contains=rech,formation__id=sel_formation.id) |
+        DetailFormation.objects.filter(createdat__contains=rech,formation__id=sel_formation.id),20)
+        page = request.GET.get('page')
+        list_detailFa =p.get_page(page)
+        compte = len(list_detailFa)
+        if rech == '':
+             compte = len(DetailFormation.objects.filter(formation__id=sel_formation.id))  
+        
+    else:
+        p = Paginator(DetailFormation.objects.filter(formation__id=sel_formation.id), 20)
+        page = request.GET.get('page')
+        list_detailFa =p.get_page(page)
+        compte = len(DetailFormation.objects.filter(formation__id=sel_formation.id))
+    
+    ctx = {
+        'sel_formation': sel_formation,
+        'list_detailFa': list_detailFa,
+        'ldf': 'active',
+        'matieres':matieres,
+        'formateurs': formateurs,
+        'compte':compte
+    }
+    return render(request,'page/detailFormation.html',ctx)
+
+
+## ADD DETAIL FORMATEURS
+
+def addFormation(request):
+    if request.method == 'POST':
+        msg = None
+        formation = request.POST.get("formation",None)
+        matiere = request.POST.get("matiere",None)
+        formateur = request.POST.get("formateur",None)
+    
+        print("#############",aprenant )
+        if formation =='':
+            msg = "Veuillez choisir la formation"
+        elif  matiere=='':
+            msg="Veuillez choisir formation"
+        elif  formation=='':
+            msg="Veuillez choisir formation"
+       
+        else:
+            form = Formation.objects.get(pk=formation)
+            matr = Matiere.objects.get(pk=matiere)
+            format = Formateur.objects.get(pk=formateur)
+           
+            df = DetailFormation(
+                matiere = matr,
+                formation = form,
+                fomateur = format
+            ) 
+            df.save()
+            return HttpResponseRedirect('/detailFormation'+formation)
+    return HttpResponseRedirect('/detailAprenant'+formation)
+
 

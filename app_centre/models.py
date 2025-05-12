@@ -51,12 +51,19 @@ class Formateur(models.Model):
 class Formation(models.Model):
     designaion = models.CharField(max_length=255,null=False)
     duree = models.CharField(max_length=30)
-    Formateurs = models.CharField(max_length=255,null=False)
-    matieres = models.CharField(max_length=255)
     createdat = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return self.designaion
+    
+class DetailFormation(models.Model):
+    formation = models.ForeignKey(Formation,on_delete=models.DO_NOTHING)
+    matiere = models.ForeignKey(Matiere,on_delete=models.DO_NOTHING)
+    formateur = models.ForeignKey(Formateur,on_delete=models.DO_NOTHING)
+    createdat = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.formation
     
 class Local(models.Model):
     designation = models.CharField(max_length=100,null=False)
