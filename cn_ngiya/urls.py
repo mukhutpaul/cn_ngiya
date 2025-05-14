@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app_centre.views import addAprenant, addDetailAprenant, addDetailFormateur, addDetailPresence, addFormateur, addFormation, addFrais, addLocal, addMatiere, addpaiement, addpresence, aprenant, deletePaie, detaiPresence, detailAprenant, detailFormateur, detailFormation, fAprenant, fFormateur, fFormation, fFrais, flocal, fmatiere, formateur, formation, fpaiement, fpresence, frais, home, local, log_out, login, matiere, paiement, presence, print_recu, sign_in
+from app_centre.views import addAprenant, addDetailAprenant, addDetailFormateur, addDetailPresence, addFormateur, addFormation, addFrais, addLocal, addMatiere, addUser, addpaiement, addpresence, aprenant, deletePaie, detaiPresence, detailAprenant, detailFormateur, detailFormation, fAprenant, fFormateur, fFormation, fFrais, fUser, flocal, fmatiere, formateur, formation, fpaiement, fpresence, frais, home, local, log_out, login, matiere, paiement, presence, print_recu, sign_in, users
 
 
 urlpatterns = [
@@ -88,6 +88,12 @@ urlpatterns = [
    ##DETAIL FORMATEUR
    path('detailFormateur<int:id>/',detailFormateur, name="detailFormateur"),
    path('addDetailFormateur/',addDetailFormateur, name="addDetailFormateur"),
+   
+   ##USERS
+   path('users/',users, name="users"),
+   path('fUser/',fUser, name="fUser"),
+   path('addUser/',addUser, name="addUser"),
+   
    
    
    

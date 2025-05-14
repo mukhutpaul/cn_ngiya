@@ -7,7 +7,7 @@ import qrcode
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login as auth_login, logout
 
-from app_centre.models import AffectationFormation, AffecteMatiereFormateur, Aprenant, DetailFormation, DetailPresence, Formateur, Formation, Frais, Local, Matiere, Paiement, Presence, SessionFormation, User
+from app_centre.models import AffectationFormation, AffecteMatiereFormateur, Aprenant, DetailFormation, DetailPresence, Formateur, Formation, Frais, Local, Matiere, Paiement, Presence, Profile, SessionFormation, User
 from django.core.paginator import Paginator
 
 from app_centre.utils import render_to_pdf
@@ -1060,6 +1060,96 @@ def addDetailFormateur(request):
             matiere.save()
             return HttpResponseRedirect('/detailFormateur'+formateur)
     return HttpResponseRedirect('/detailFormateur'+formateur)
+
+@login_required(login_url="sign_in")
+def users(request):
+    if request.method == "POST":
+        rech = request.POST['rech']
+        p = Paginator(User.objects.filter(username__contains=rech) |
+        User.objects.filter(noms__contains=rech) )
+        page = request.GET.get('page')
+        pages =p.get_page(page)
+        compte = len(pages)
+        if rech == '':
+             compte = len(User.objects.all())  
+        
+    else:
+        p = Paginator(User.objects.all(), 20)
+        page = request.GET.get('page')
+        pages =p.get_page(page)
+        compte = len(User.objects.all())
+    ctx = {
+        'compte' : compte,
+        'users' : pages,
+        'luser': 'active',
+        'pages':pages
+    }
+    return render(request,'user/user.html',ctx)
+
+##Formulaire Frais
+@login_required(login_url="sign_in")
+def fUser(request):
+    profiles = Profile.objects.all()
+    
+    ctx = {
+        'pro': profiles
+    }
+    
+    
+    return render(request,'formulaire/FUser.html',ctx)
+
+##ADD USERS
+def addUser(request):
+    if request.method == 'POST':
+        profiles = Profile.objects.all()
+        msg = None
+        msok =None
+        profile = request.POST.get("profile",None)
+        noms = request.POST.get("noms",None)
+        username = request.POST.get("username",None)
+        email = request.POST.get("email",None)
+        password = request.POST.get("password",None)
+
+        if email =='':
+            msg = "Veuillez remplir le mail"
+            profiles = Profile.objects.all()
+        elif profile=='':
+            msg="Veuillez choisir le profile"
+            profiles = Profile.objects.all()
+        
+        elif len(User.objects.get(username=username))>0:
+            msg="Ce nom utilisateur existe déjà"
+            profiles = Profile.objects.all()
+            
+        elif len(User.objects.get(email=email))>0:
+            msg="Cette adresse mail existe déjà"
+            profiles = Profile.objects.all() 
+        elif noms=='':
+            msg="Veuillez remplir les noms"
+            profiles = Profile.objects.all()
+        elif username =='':
+            msg="Veuillez remplir le nom utilisateur"
+            profiles = Profile.objects.all()
+        elif password =='':
+            msg="Veuillez remplir le mot de passe"
+            profiles = Profile.objects.all()
+        else:
+            pro = Profile.objects.get(pk=profile)
+            
+            u = User(
+                noms = noms.upper(),
+                profile = pro,
+                username = username.upper(),
+                email = email,
+                is_active = True
+            ) 
+            u.set_password(password)
+            u.save()
+            msok = username+ " est enregistré comme utiisateur"
+            
+            #return HttpResponseRedirect('/detailFormateur'+formateur)
+        
+    return render(request,'formulaire/FUser.html',{'msg':msg,'msok':msok,'pro':profiles})
 
 
 
