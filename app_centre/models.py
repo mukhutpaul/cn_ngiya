@@ -40,13 +40,19 @@ class Formateur(models.Model):
     niveauEtude = models.CharField(max_length=30)
     telephone = models.CharField(max_length=15)
     email = models.CharField(max_length=100)
-    langue = models.CharField(max_length=50)
     adresse = models.CharField(max_length=255)
-    matieres = models.CharField(max_length=255)
     createdAt = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return self.nom+" "+self.postnom+" "+self.prenom
+
+class AffecteMatiereFormateur(models.Model):
+    formateur = models.ForeignKey(Formateur,on_delete=models.DO_NOTHING)
+    matiere = models.ForeignKey(Matiere,on_delete=models.DO_NOTHING)
+    createdat = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.formateur
     
 class Formation(models.Model):
     designaion = models.CharField(max_length=255,null=False)
@@ -94,13 +100,12 @@ class AffectationFormation(models.Model):
         return self.aprenant.nom
 
 class Frais(models.Model):
-    codeFrais = models.CharField(max_length=30)
     designation = models.CharField(max_length=100)
     cout = models.IntegerField()
     createdat = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return self.codeFrais+" "+self.designation
+        return self.designation
 
 class Paiement(models.Model):
     aprenant = models.ForeignKey(Aprenant,on_delete=models.DO_NOTHING)
@@ -116,6 +121,7 @@ class Presence(models.Model):
     formation = models.ForeignKey(Formation,on_delete=models.DO_NOTHING)
     matiere = models.ForeignKey(Matiere,on_delete=models.DO_NOTHING)
     sesion = models.ForeignKey(SessionFormation,on_delete=models.DO_NOTHING)
+    datePr = models.CharField(max_length=20, null=True)
     createdat = models.DateTimeField(auto_now=True)
     
     def __int__(self):

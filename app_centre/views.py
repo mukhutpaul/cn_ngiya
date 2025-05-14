@@ -7,7 +7,7 @@ import qrcode
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login as auth_login, logout
 
-from app_centre.models import AffectationFormation, Aprenant, DetailFormation, DetailPresence, Formateur, Formation, Frais, Local, Matiere, Paiement, Presence, SessionFormation, User
+from app_centre.models import AffectationFormation, AffecteMatiereFormateur, Aprenant, DetailFormation, DetailPresence, Formateur, Formation, Frais, Local, Matiere, Paiement, Presence, SessionFormation, User
 from django.core.paginator import Paginator
 
 from app_centre.utils import render_to_pdf
@@ -18,10 +18,31 @@ from cn_ngiya import settings
 # Create your views here.
 @login_required(login_url="sign_in")
 def home(request):
-    print(request.user)
+    nbrAprenant = Aprenant.objects.all().count()
+    nbrFormateur = Formateur.objects.all().count()
+    nbrFormation = Formateur.objects.all().count()
+    nbrhomme = Aprenant.objects.filter(sexe="M").count()
+    nbrFemme = Aprenant.objects.filter(sexe="F").count()
+    formations = Formation.objects.all()
+    
+    data = []
+    
+    for d in formations:
+        nbr =AffectationFormation.objects.filter(formation=d).count()
+        data.append({
+            'formation':d.designaion,
+            'compte': nbr
+        })
     
     ctx ={
-        'hm': 'active'
+        'hm': 'active',
+        'nbrAprenant':nbrAprenant,
+        'nbrFormateur':nbrFormateur,
+        'nbrFormation': nbrFormation,
+        'nbrlocal': Local.objects.all().count(),
+        'nbrhomme':nbrhomme,
+        'nbrFemme':nbrFemme,
+        'formations': data
     }
     
     return render(request,'page/home.html',ctx)
@@ -94,7 +115,7 @@ def formateur(request):
              compte = len(Formateur.objects.all())  
         
     else:
-        p = Paginator(Formateur.objects.all(), 20)
+        p = Paginator(Formateur.objects.all().order_by('-id'), 20)
         page = request.GET.get('page')
         pages =p.get_page(page)
         compte = len(Formateur.objects.all())
@@ -120,7 +141,7 @@ def formation(request):
              compte = len(Formation.objects.all())  
         
     else:
-        p = Paginator(Formation.objects.all(), 20)
+        p = Paginator(Formation.objects.all().order_by('-id'), 20)
         page = request.GET.get('page')
         pages =p.get_page(page)
         compte = len(Formation.objects.all())
@@ -146,7 +167,7 @@ def local(request):
              compte = len(Local.objects.all())  
         
     else:
-        p = Paginator(Local.objects.all(), 20)
+        p = Paginator(Local.objects.all().order_by('-id'), 20)
         page = request.GET.get('page')
         pages =p.get_page(page)
         compte = len(Local.objects.all())
@@ -173,7 +194,7 @@ def frais(request):
              compte = len(Frais.objects.all())  
         
     else:
-        p = Paginator(Frais.objects.all(), 20)
+        p = Paginator(Frais.objects.all().order_by('-id'), 20)
         page = request.GET.get('page')
         pages =p.get_page(page)
         compte = len(Frais.objects.all())
@@ -285,10 +306,7 @@ def print_recu(request,id):
 
 
 # USER AUTHENTIFICATION
-
-
 def login(request):
-    
     
     return render(request,'user/login.html')
 
@@ -341,43 +359,49 @@ def addpaiement(request):
 
     if request.method == 'POST':
         msg = None
+        msk = None
         frais_id = request.POST.get("fraisid",None)
         aprenant_id = request.POST.get("aprenantid",None)
         montant = request.POST.get("montant",0)
-        
-        paies = Paiement.objects.filter(aprenant=aprenant_id,frais=frais_id)
-        frss = Frais.objects.get(pk=frais_id)
         somme=0
-        for p in paies:
-            somme += p.montant
-        sm = int(montant) + somme
-        print("MUKHUT %%%%",sm)
-        if frais_id:
-            if  montant:
-                if  aprenant_id:
-                    if somme >= frss.cout:
-                        msg = "Cet aprenant a déjà soldé ce frais"
+        sm =0
+        
+        if frais_id == '':
+            msg ="Veuillez remplir le frais"
+        elif  montant=='':
+            msg ="Veuillez remplir le montant"
+        
+        elif  aprenant_id == '':
+            paies = Paiement.objects.filter(aprenant=aprenant_id,frais=frais_id)
+            frss = Frais.objects.get(pk=frais_id)
+            for p in paies:
+                somme += p.montant
+            sm = int(montant) + somme
+            print("MUKHUT %%%%",sm)
+            msg ="Veuillez choisir l aprenant"
+            if somme >= frss.cout:
+                msg = "Cet aprenant a déjà soldé ce frais"
                         
-                    elif sm > frss.cout:
-                         msg = "Le montant inscrit est supérieur au solde restant pour ce frais"
-                    elif int(montant)>frss.cout:
-                        msg = "Le montant inscrit est supérieur au coût de ce frais"
+            elif sm > frss.cout:
+                msg = "Le montant inscrit est supérieur au solde restant pour ce frais"
+            elif int(montant)>frss.cout:
+                msg = "Le montant inscrit est supérieur au coût de ce frais"
                          
-                    else:
+            else:
                         #frs = Frais.objects.get(pk=frais_id)
-                        apr = Aprenant.objects.get(pk=aprenant_id)
-                        paie = Paiement(
-                                aprenant = apr,
-                                frais = frss,
-                                montant = montant
-                            ) 
-                        paie.save()
-                        return HttpResponseRedirect('/paie/')
-        else:
-            msg ="Veuillez remplir les champs obliatoires"
+                apr = Aprenant.objects.get(pk=aprenant_id)
+                paie = Paiement(
+                        aprenant = apr,
+                        frais = frss,
+                        montant = montant
+                    ) 
+                paie.save()
+                msk = "Traitement ok"
+                print("aaaaaaaaa",msk)
+                #return HttpResponseRedirect('/paie/')
         
             
-    return render(request,'formulaire/FPaiement.html',{'msg':msg,'frs': frs,'apr': apr})
+    return render(request,'formulaire/FPaiement.html',{'msg':msg,'frs': frs,'apr': apr,'msk':msk})
 
 #Delete paie
 def deletePaie(request,id):
@@ -395,9 +419,9 @@ def fmatiere(request):
 
 ##ADD MATIERES
 def addMatiere(request):
-   
     if request.method == 'POST':
         msg = None
+        msok = None
         designat = request.POST.get("matiere",None)
         hr = request.POST.get("heure",None)
         
@@ -407,15 +431,17 @@ def addMatiere(request):
             msg ="Veuillez remplir le volume horaire"
         else:
             mt = Matiere(
-                designation = designat,
+                designation = designat.upper(),
                 nombreHeure = hr
             )
             mt.save()
-            return HttpResponseRedirect('/matiere/')
+            msok = "Traitement ok"
+            #return HttpResponseRedirect('/matiere/')
     ctx ={
-        'msg':msg
+        'msg':msg,
+        'msok': msok
     }
-    return render(request,'FMatiere.html',ctx)
+    return render(request,'formulaire/FMatiere.html',ctx)
 
 
 ###APPRENANT FORMULAIRES
@@ -426,11 +452,12 @@ def fAprenant(request):
     
     return render(request,'formulaire/FAprenant.html')
 
-##ADD MATIERES
-def addMatiere(request):
+##ADD APPRENANT
+def addAprenant(request):
    
     if request.method == 'POST':
         msg = None
+        mesok =None
         nom = request.POST.get("nom",None)
         postnom = request.POST.get("postnom",None)
         prenom = request.POST.get("prenom",None)
@@ -438,28 +465,60 @@ def addMatiere(request):
         datenais = request.POST.get("datenais",None)
         langue = request.POST.get("langue",None)
         etatciv = request.POST.get("etatciv",None)
-        postnom = request.POST.get("postnom",None)
-        postnom = request.POST.get("postnom",None)
-        postnom = request.POST.get("postnom",None)
+        niveau = request.POST.get("niveau",None)
+        adresse = request.POST.get("adresse",None)
+        email = request.POST.get("email",None)
+        telephone  = request.POST.get("telephone",None)
+        sexe  = request.POST.get("sexe",None)
         
-        
-        
-        
-        if designat == '':
-            msg ="Veuillez remplir la désignation"
-        elif hr == '':
-            msg ="Veuillez remplir le volume horaire"
+        if nom == '':
+            msg ="Veuillez remplir le nom"
+        elif postnom == '':
+            msg ="Veuillez remplir le postnom"
+        elif prenom == '':
+            msg ="Veuillez remplir le prenom"
+        elif lieu == '':
+            msg ="Veuillez remplir le lieu de naissance"
+        elif datenais == '':
+            msg ="Veuillez remplir la date de naissance"
+        elif langue == '':
+            msg ="Veuillez choisir la langue"
+        elif etatciv == '':
+            msg ="Veuillez remplir l'état civil"
+        elif niveau == '':
+            msg ="Veuillez remplir l'état civil"
+        elif telephone == '':
+            msg ="Veuillez remplir le téléphone"
+        elif adresse == '':
+            msg ="Veuillez remplir l'adresse"
+        elif email == '':
+            msg ="Veuillez remplir le mail"
+        elif sexe == '':
+            msg ="Veuillez remplir le sexe"
         else:
-            mt = Matiere(
-                designation = designat,
-                nombreHeure = hr
+            
+            apr = Aprenant(
+                nom = nom.upper(),
+                postnom = postnom.upper(),
+                prenom = prenom.upper(),
+                lieunaissance = lieu.upper(),
+                datenaissance = datenais,
+                sexe = sexe.upper(),
+                Etatcivil = etatciv.upper(),
+                niveauEtude = niveau.upper(),
+                telephone = telephone.upper(),
+                email = email,
+                langue = langue.upper(),
+                adresse = adresse.upper()
             )
-            mt.save()
-            return HttpResponseRedirect('/matiere/')
+            apr.save()
+            mesok = nom + " "+postnom+" est inscrit avec succès"
+            #return HttpResponseRedirect('/aprenant/')
     ctx ={
-        'msg':msg
+        'msg':msg,
+        'mesok': mesok 
     }
-    return render(request,'FMatiere.html',ctx)
+    return render(request,'formulaire/FAprenant.html',ctx)
      
         
 
@@ -479,7 +538,7 @@ def presence(request):
              compte = len(Presence.objects.all())  
         
     else:
-        p = Paginator(Presence.objects.all(), 20)
+        p = Paginator(Presence.objects.all().order_by(('-id')), 20)
         page = request.GET.get('page')
         pages =p.get_page(page)
         compte = len(Presence.objects.all())
@@ -585,8 +644,6 @@ def detailAprenant(request,id):
     formations = Formation.objects.all()
     sessions = SessionFormation.objects.all()
     
-
-
     if request.method == "POST":
         rech = request.POST['rech']
         p = Paginator(AffectationFormation.objects.filter(aprenant__nom__contains=rech,aprenant__id=sel_aprenant.id) |
@@ -602,7 +659,7 @@ def detailAprenant(request,id):
         p = Paginator(AffectationFormation.objects.filter(aprenant__id=sel_aprenant.id), 20)
         page = request.GET.get('page')
         list_detailA =p.get_page(page)
-        compte = len(AffectationFormation.objects.all())
+        compte = len(AffectationFormation.objects.filter(aprenant__id=sel_aprenant.id))
     
     ctx = {
         'sel_aprenant': sel_aprenant,
@@ -709,5 +766,299 @@ def addFormation(request):
             df.save()
             return HttpResponseRedirect('/detailFormation'+formation)
     return HttpResponseRedirect('/detailAprenant'+formation)
+
+
+#Formulaires Présence
+@login_required(login_url="sign_in")
+def fpresence(request):
+    matiere = Matiere.objects.all()
+    session = SessionFormation.objects.all()
+    formation = Formation.objects.all()
+    
+    ctx = {
+        'matiere': matiere,
+        'session': session,
+        'formation': formation
+    }
+    
+    return render(request,'formulaire/FPresence.html',ctx)
+
+#addPrésence
+
+def addpresence(request):
+   
+    if request.method == 'POST':
+        msg = None
+        msok = None
+        dateP = request.POST.get("dateP",None)
+        session = request.POST.get("session",None)
+        formation = request.POST.get("formation",None)
+        matiere = request.POST.get("matiere",None)
+        
+        if dateP == '':
+            msg ="Veuillez remplir la date"
+            matiere = Matiere.objects.all()
+            session = SessionFormation.objects.all()
+            formation = Formation.objects.all()
+        elif  session=='':
+            matiere = Matiere.objects.all()
+            session = SessionFormation.objects.all()
+            formation = Formation.objects.all()
+            msg ="Veuillez remplir la session"
+        
+        elif  formation == '':
+            matiere = Matiere.objects.all()
+            session = SessionFormation.objects.all()
+            formation = Formation.objects.all()
+            msg ="Veuillez remplir la formation"
+        elif  matiere == '':
+            matiere = Matiere.objects.all()
+            session = SessionFormation.objects.all()
+            formation = Formation.objects.all()
+            msg ="Veuillez remplir la matiere"
+        else:
+            mat = Matiere.objects.get(pk=matiere)
+            ses = SessionFormation.objects.get(pk=session)
+            form = Formation.objects.get(pk=formation)
+            pr = Presence(
+                formation = form,
+                matiere = mat,
+                sesion = ses,
+                datePr = dateP
+            )
+            pr.save()
+            msok = "Traitement ok!"
+    ctx ={
+        'msg':msg,
+        'msok':msok,
+        'matiere': matiere,
+        'formation': formation,
+        'session': session
+    }
+    return render(request,'formulaire/FPresence.html',ctx)
+
+##Formulaire Local
+@login_required(login_url="sign_in")
+def flocal(request):
+    
+    
+    return render(request,'formulaire/FLocal.html')
+
+##ADD MATIERES
+def addLocal(request):
+   
+    if request.method == 'POST':
+        msg = None
+        msok = None
+        designat = request.POST.get("designation",None)
+        cap = request.POST.get("cap",None)
+        
+        if designat == '':
+            msg ="Veuillez remplir la désignation"
+        elif cap == '':
+            msg ="Veuillez remplir la capacité d'accueil"
+        else:
+            loc = Local(
+                designation = designat.upper(),
+                capacite = cap
+            )
+            loc.save()
+            msok ="Traitement ok"
+            #return HttpResponseRedirect('/matiere/')
+    ctx ={
+        'msg':msg,
+        'msok': msok 
+    }
+    return render(request,'formulaire/FLocal.html',ctx)
+
+##Formulaire Formation
+@login_required(login_url="sign_in")
+def fFormation(request):
+    
+    
+    return render(request,'formulaire/FFormation.html')
+
+##ADD Formation
+def addFormation(request):
+    if request.method == 'POST':
+        msg = None
+        msok = None
+        designat = request.POST.get("designation",None)
+        duree = request.POST.get("duree",None)
+        
+        if designat == '':
+            msg ="Veuillez remplir la désignation"
+        elif duree == '':
+            msg ="Veuillez remplir la durée de la formation"
+        else:
+            form = Formation(
+                designaion = designat.upper(),
+                duree = duree.upper()
+            )
+            form.save()
+            msok ="Traitement ok"
+            #return HttpResponseRedirect('/matiere/')
+    ctx ={
+        'msg':msg,
+        'msok': msok 
+    }
+    return render(request,'formulaire/FFormation.html',ctx)
+
+
+##Formulaire Frais
+@login_required(login_url="sign_in")
+def fFrais(request):
+    
+    
+    return render(request,'formulaire/FFrais.html')
+
+##ADD FRAIS
+def addFrais(request):
+    if request.method == 'POST':
+        msg = None
+        msok = None
+        designat = request.POST.get("designation",None)
+        cout = request.POST.get("cout",None)
+        
+        if designat == '':
+            msg ="Veuillez remplir la désignation"
+        elif cout == '':
+            msg ="Veuillez remplir le coût"
+        elif len(cout)>3:
+            msg ="le coût ne peut pas être supérieur à 3 caractères"
+        else:
+            fr = Frais(
+                designation = designat.upper(),
+                cout = cout
+            )
+            fr.save()
+            msok ="Traitement ok"
+            #return HttpResponseRedirect('/matiere/')
+    ctx ={
+        'msg':msg,
+        'msok': msok 
+    }
+    return render(request,'formulaire/FFrais.html',ctx)
+
+
+###FORMATEUR FORMULAIRES
+
+@login_required(login_url="sign_in")
+def fFormateur(request):
+    
+    return render(request,'formulaire/FFormateur.html')
+
+##ADD APPRENANT
+def addFormateur(request):
+   
+    if request.method == 'POST':
+        msg = None
+        mesok =None
+        nom = request.POST.get("nom",None)
+        postnom = request.POST.get("postnom",None)
+        prenom = request.POST.get("prenom",None)
+        etatciv = request.POST.get("etatciv",None)
+        niveau = request.POST.get("niveauEtud",None)
+        adresse = request.POST.get("adresse",None)
+        email = request.POST.get("email",None)
+        telephone  = request.POST.get("telephone",None)
+        sexe  = request.POST.get("sexe",None)
+        
+        if nom == '':
+            msg ="Veuillez remplir le nom"
+        elif postnom == '':
+            msg ="Veuillez remplir le postnom"
+        elif prenom == '':
+            msg ="Veuillez remplir le prenom"
+        elif etatciv == '':
+            msg ="Veuillez remplir l'état civil"
+        elif niveau == '':
+            msg ="Veuillez remplir l'état civil"
+        elif telephone == '':
+            msg ="Veuillez remplir le téléphone"
+        elif adresse == '':
+            msg ="Veuillez remplir l'adresse"
+        elif email == '':
+            msg ="Veuillez remplir le mail"
+        elif sexe == '':
+            msg ="Veuillez remplir le sexe"
+        else:
+            
+            apr = Formateur(
+                nom = nom.upper(),
+                postnom = postnom.upper(),
+                prenom = prenom.upper(),
+                sexe = sexe.upper(),
+                Etatcivil = etatciv.upper(),
+                niveauEtude = niveau.upper(),
+                telephone = telephone.upper(),
+                email = email,
+                adresse = adresse.upper()
+            )
+            apr.save()
+            mesok = nom + " "+postnom+" est inscrit avec succès"
+            #return HttpResponseRedirect('/aprenant/')
+    ctx ={
+        'msg':msg,
+        'mesok': mesok 
+    }
+    return render(request,'formulaire/FFormateur.html',ctx)
+
+##DETAILS FORMATEURS
+def detailFormateur(request,id):
+    sel_formateur = Formateur.objects.get(id = id)
+    #liste_formationD = AffectationFormation.objects.all()
+    matiere = Matiere.objects.all()
+    if request.method == "POST":
+        rech = request.POST['rech']
+        p = Paginator(AffecteMatiereFormateur.objects.filter(formateur__nom__contains=rech,formateur__id=sel_formateur.id) |
+        AffecteMatiereFormateur.objects.filter(formateur__postnom__contains=rech,formateur__id=sel_formateur.id) |
+        AffecteMatiereFormateur.objects.filter(matiere__designation__contains=rech,formateur__id=sel_formateur.id),20)
+        page = request.GET.get('page')
+        list_detailF =p.get_page(page)
+        compte = len(list_detailF)
+        if rech == '':
+             compte = len(AffecteMatiereFormateur.objects.filter(formateur__id=sel_formateur.id))  
+        
+    else:
+        p = Paginator(AffecteMatiereFormateur.objects.filter(formateur__id=sel_formateur.id).order_by('-id'), 20)
+        page = request.GET.get('page')
+        list_detailF =p.get_page(page)
+        compte = len(AffecteMatiereFormateur.objects.filter(formateur__id=sel_formateur.id))
+    
+    ctx = {
+        'sel_formateur': sel_formateur,
+        'list_detailF': list_detailF,
+        'matiere': matiere,
+        'lf': 'active',
+        'compte':compte
+    }
+    return render(request,'page/detailFormateur.html',ctx)
+
+##ADD DETALS FORMATEUR
+def addDetailFormateur(request):
+    if request.method == 'POST':
+        msg = None
+        formateur = request.POST.get("formateur",None)
+        matiere = request.POST.get("matiere",None)
+
+        if formateur =='':
+            msg = "Veuillez choisir la matière"
+        elif  matiere=='':
+            msg="Veuillez choisir la matière"
+       
+        else:
+            format = Formateur.objects.get(pk=formateur)
+            mat = Matiere.objects.get(pk=matiere)
+            
+            matiere = AffecteMatiereFormateur(
+                formateur = format,
+                matiere = mat,
+            ) 
+            matiere.save()
+            return HttpResponseRedirect('/detailFormateur'+formateur)
+    return HttpResponseRedirect('/detailFormateur'+formateur)
+
+
 
 

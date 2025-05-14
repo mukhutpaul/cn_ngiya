@@ -9,6 +9,7 @@
     <!-- plugins:css -->
     <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+    <script src="sweetalert2.min.js"></script>
     <!-- endinject -->
     <!-- Plugin css for this page -->
     <link rel="stylesheet" href="{% static 'vendors/jvectormap/jquery-jvectormap.css' %}">
@@ -427,6 +428,8 @@
         <div class="main-panel">
           <div class="content-wrapper">
           {% block content %}
+          
+    
 
           {% endblock content %}
 
@@ -445,8 +448,12 @@
       <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
+    
+   
     <!-- plugins:js -->
     <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css">
     <!-- endinject -->
     <!-- Plugin js for this page -->
     <script src="{% static 'vendors/chart.js/Chart.min.js' %}"></script>

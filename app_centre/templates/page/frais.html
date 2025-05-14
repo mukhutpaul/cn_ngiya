@@ -10,7 +10,7 @@
                 <h4 class="card-title" >Gestion des frais</h4>
                 
               </div>
-              <a href="" class="btn btn-inverse-success mr-2">Ajouter un frais</a>
+              <a href="{% url 'fFrais' %}" class="btn btn-inverse-success mr-2">Ajouter un frais</a>
               <nav aria-label="breadcrumb">
                 <form action="" method="post" class="forms-sample breadcrumb">
                   {% csrf_token %}
@@ -26,7 +26,6 @@
             <thead style="color:white">
               <tr>
                 <th style="color:white;"> Id </th>
-                <th style="color:white;"> Code </th>
                 <th style="color:white;">Designation</th>
                 <th style="color:white;">Coût</th>
                 <th style="color:white;"> Actions </th>
@@ -38,7 +37,6 @@
                 <td class="py-1">
                 {{f.id}}
                 </td>
-                <td> {{f.codeFrais}} </td>
                 <td> {{f.designation}} </td>
                 <td>
                      {{f.cout}} 

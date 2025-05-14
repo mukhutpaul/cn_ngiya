@@ -6,9 +6,9 @@
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Formulaire d'ajout d'un aprenant</h4>
+        <h4 class="card-title">Formulaire d'ajout d'un formateur</h4>
         <p class="card-description"> Information </p>
-        <form class="forms-sample" method="post" action="{% url 'addAprenant' %}">
+        <form class="forms-sample" method="post" action="{% url 'addFormateur' %}">
             {% csrf_token %}
         <div class="row">
             <div class="col-6">
@@ -27,19 +27,8 @@
                     <label for="exampleInputCity1">Prenom</label>
                     <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="prénom" name="prenom">
                   </div>
-
-                   <div class="form-group">
-                    <label for="exampleInputCity1">Lieu de naissance</label>
-                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="lieu de naissance" name="lieu">
-                  </div>
-
-                   <div class="form-group">
-                    <label for="exampleInputCity1">Date Naissance</label>
-                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Date Naissance" name="datenais">
-                  </div>
-
                 <div class="form-group">
-                 <label>Langue</label>
+                 <label>Sexe</label>
                     <select class="js-example-basic-single" style="width:100%" name="sexe">
                     <option value="">--------------</option>
                     <option value="M">HOMME</option> 
@@ -60,12 +49,18 @@
                     <option value="DIVORCE">DIVORCE</option> 
                     </select>
                   </div>
-                
-                   <div class="form-group">
-                    <label for="exampleInputCity1">Niveau D'étude</label>
-                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Niveau d'étude" name="niveau">
-                  </div>
 
+                  <div class="form-group">
+                 <label>Niveau d'étude</label>
+                    <select class="js-example-basic-single" style="width:100%" name="niveauEtud">
+                    <option value="">--------------</option>
+                    <option value="LICENCIE">LICENCIE</option> 
+                    <option value="GRADUE">GRADUE</option> 
+                    <option value="DIPLOME">DIPLOME</option> 
+                    <option value="AUTRES">AUTRES</option> 
+                    </select>
+                  </div>
+              
                    <div class="form-group">
                     <label for="exampleInputCity1">E-mail</label>
                     <input type="mail" style="color:white" class="form-control" id="exampleInputCity1" placeholder="email" name="email">
@@ -75,22 +70,13 @@
                     <label for="exampleInputCity1">Téléphone</label>
                     <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="téléphone" name="telephone">
                   </div>
-                <div class="form-group">
-                 <label>Langue</label>
-                    <select class="js-example-basic-single" style="width:100%" name="langue">
-                    <option value="">--------------</option>
-                    <option value="FRANCAIS">FRANCAIS</option> 
-                    <option value="FRANCAIS">ANGLAIS</option> 
-                    <option value="AUTRES">AUTRES</option> 
-                    </select>
-                  </div>
      
                {% if msg %}
                     <script>
                           Swal.fire({
                                 icon: "error",
                                 title: "Erreur",
-                                text: ('{{msg}}') ,
+                                text: ('{{msg}}'),
                               });   
                               
                               
@@ -118,9 +104,9 @@
 
 
           <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
-          
+          <a class="btn btn-primary mr-2" href="{% url 'formateur' %}" style="color:white">Retour<a/>
         </form>
-        <button class="btn btn-primary mr-2"><a href="{% url 'aprenant' %}" style="color:white">Retour<a/></button>
+        
       </div>
     </div>
   </div>

@@ -10,7 +10,7 @@
                 <h4 class="card-title" >Gestion des formateurs</h4>
                 
               </div>
-              <a href="" class="btn btn-inverse-success mr-2">Ajouter un formateur</a>
+              <a href="{% url 'fFormateur' %}" class="btn btn-inverse-success mr-2">Ajouter un formateur</a>
               <nav aria-label="breadcrumb">
                 <form action="" method="post" class="forms-sample breadcrumb">
                   {% csrf_token %}
@@ -39,7 +39,7 @@
                 <td class="py-1">
                 {{f.id}}
                 </td>
-                <td> {{f.nom}} </td>
+                <td><a href="{% url 'detailFormateur' f.id %}"> {{f.nom}} </a></td>
                 <td>
                      {{f.postnom}} 
                 </td>

@@ -5,47 +5,28 @@
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h6 class="card-title">Aprenant : {{sel_aprenant.nom}} {{sel_aprenant.postnom}} {{sel_aprenant.prenom}}</h6>
-        <p class="card-description">inscrit(e) le {{sel_aprenant.createdAt}}</p>
+        <h6 class="card-title">Formateur : {{sel_formateur.nom}} {{sel_formateur.postnom}} {{sel_formateur.prenom}}</h6>
+        <p class="card-description">Enregistré le {{sel_formateur.createdAt}}</p>
        
-        <form class="forms-sample" method="post" action="{% url 'addDetailAprenant' %}">
+        <form class="forms-sample" method="post" action="{% url 'addDetailFormateur' %}">
             {% csrf_token %}
         <div class="row">
             <div class="col-6">
                     <div class="form-group">
                         
-                        <select class="js-example-basic-single" style="width:100%" name="session">
-                          <option value="">Selectionnez la session</option>
-                          {% for s in sessions %}
-                          <option value="{{s.id}}">{{s.designation}}-{{s.dateDebut}}-{{s.dateFin}}</option>
+                        <select class="js-example-basic-single" style="width:100%" name="matiere">
+                          <option value="">Selectionnez une matière</option>
+                          {% for m in matiere %}
+                          <option value="{{m.id}}">{{m.designation}}-{{m.nombreHeure}} HEURES</option>
                           {% endfor %}
-                        </select>
-                     </div>
-
-                      <div class="form-group">
-                        
-                        <select class="js-example-basic-single" style="width:100%" name="sponsor">
-                          <option value="">Sponsorisé?</option>
-                           <option value="True">Oui</option>
-                           <option value="False">Non</option>
                         </select>
                      </div>
                    
-                    <input type="text" name="aprenant" value="{{sel_aprenant.id}}" hidden class="form-control" style="color:white" id="exampleInputCity1">
+                    <input type="text" name="formateur" value="{{sel_formateur.id}}" hidden class="form-control" style="color:white" id="exampleInputCity1">
             </div>
 
             <div class="col-6">
-               <div class="form-group">
-                        <select class="js-example-basic-single" style="width:100%" name="formation">
-                          <option value="">Selectionnez la formation</option>
-                          {% for f in formations %}
-                          <option value="{{f.id}}">{{f.designaion}}</option>
-                          {% endfor %}
-                        </select>
-                     </div>
-
-                 <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
-                 <button class="btn btn-dark">Annuler</button><br> <br>
+                 <button type="submit" class="btn btn-primary mr-2">Ajouter</button>
                {% if msg %}
                <div class="form-group">
                 <label style="color:red">{{msg}}</label>
@@ -54,7 +35,7 @@
             </div>
           </div>
          </form>
-         {% if list_detailA %}
+         {% if list_detailF %}
         <div class="row">
           <div class="" style="margin:-10px">
               <form action="" method="post" class="forms-sample breadcrumb">
@@ -72,27 +53,23 @@
             <thead>
               <tr>
                 <th style ="color:white"> Id </th>
-                <th style ="color:white"> Aprenant </th>
-                <th style ="color:white"> Session </th>
-                <th style ="color:white"> Formation </th>
-                <th style ="color:white"> Sponsorisé </th>
-                <th style ="color:white"> Date </th>
+                <th style ="color:white"> Matière </th>
+                <th style ="color:white">Volume Horaire</th>
+                <th style ="color:white">Date de création</th>
                 <th style ="color:white"> Actions </th>
               </tr>
             </thead>
             <tbody>
-                {% for d in list_detailA %}
+                {% for f in list_detailF %}
               <tr>
                 <td class="py-1">
-                {{d.id}}
+                {{forloop.counter}}
                 </td>
-                <td> {{d.aprenant}} </td>
+                <td> {{f.matiere}} </td>
                 <td>
-                     {{d.session}} 
+                     {{f.matiere.nombreHeure}} HEURES
                 </td>
-                <td> {{d.formation}}  </td>
-                <td> {% if d.sponsoriser == True %} OUI {% else %}NON{%endif%}</td>
-                 <td> {{d.createdat}} </td>
+                 <td> {{f.createdat}} </td>
                 <td>
                     <a href="" onclick="return confirm('Etes-vous sûr de vouloir supprimer?')"> <i class="mdi mdi-delete"></i></a>
                     <a href=""><i class="mdi mdi-table-edit"></i></a>

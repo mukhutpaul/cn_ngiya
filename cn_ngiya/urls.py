@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app_centre.views import addDetailAprenant, addDetailPresence, addFormation, addMatiere, addpaiement, aprenant, deletePaie, detaiPresence, detailAprenant, detailFormation, fAprenant, fmatiere, formateur, formation, fpaiement, frais, home, local, log_out, login, matiere, paiement, presence, print_recu, sign_in
+from app_centre.views import addAprenant, addDetailAprenant, addDetailFormateur, addDetailPresence, addFormateur, addFormation, addFrais, addLocal, addMatiere, addpaiement, addpresence, aprenant, deletePaie, detaiPresence, detailAprenant, detailFormateur, detailFormation, fAprenant, fFormateur, fFormation, fFrais, flocal, fmatiere, formateur, formation, fpaiement, fpresence, frais, home, local, log_out, login, matiere, paiement, presence, print_recu, sign_in
 
 
 urlpatterns = [
@@ -62,7 +62,46 @@ urlpatterns = [
    
    ##Formulaires Aprenant
    path('fAprenant/',fAprenant, name="fAprenant"),
-   path('addMatiere/',addMatiere, name="addMatiere"),
+   path('addAprenant/',addAprenant, name="addAprenant"),
+   
+   
+   ##Formulaires Présence
+   path('fpresence/',fpresence, name="fpresence"),
+   path('addpresence/',addpresence, name="addpresence"),
+   
+   ##FLOCAL
+   path('flocal/',flocal, name="flocal"),
+   path('addLocal/',addLocal, name="addLocal"),
+   
+   ##FFORMATION
+   path('fFormation/',fFormation, name="fFormation"),
+   path('addFormation/',addFormation, name="addFormation"),
+   
+   ##FFRAIS
+   path('fFrais/',fFrais, name="fFrais"),
+   path('addFrais/',addFrais, name="addFrais"),
+   
+   ##FFormateur
+   path('fFormateur/',fFormateur, name="fFormateur"),
+   path('addFormateur/',addFormateur, name="addFormateur"),
+   
+   ##DETAIL FORMATEUR
+   path('detailFormateur<int:id>/',detailFormateur, name="detailFormateur"),
+   path('addDetailFormateur/',addDetailFormateur, name="addDetailFormateur"),
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
    
    
    
