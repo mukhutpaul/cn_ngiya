@@ -42,6 +42,8 @@ def home(request):
         'nbrlocal': Local.objects.all().count(),
         'nbrhomme':nbrhomme,
         'nbrFemme':nbrFemme,
+        "noms": request.user.noms,
+        "profile": request.user.profile,
         'formations': data
     }
     
