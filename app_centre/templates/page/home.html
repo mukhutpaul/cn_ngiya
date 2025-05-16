@@ -89,8 +89,8 @@
           <div class="row">
             <div class="col-9">
               <div class="d-flex align-items-center align-self-start">
-                <h3 class="mb-0">{{nbrlocal}}</h3>
-                <p class="text-success ml-2 mb-0 font-weight-medium">Locaux</p>
+                <h3 class="mb-0">{{utilisateurs }}</h3>
+                <p class="text-success ml-2 mb-0 font-weight-medium">Utilisateurs</p>
               </div>
             </div>
             <div class="col-3">
@@ -138,15 +138,19 @@
             <h4 class="card-title mb-1">Details Formations</h4>
           </div>
           <div class="row">
+           
             <div class="col-12">
+               {% for f in formations %}
               <div class="preview-list">
+                
                 <div class="preview-item border-bottom">
+                  <a href="{% url 'statistiquePresence' f.id %}">
                   <div class="preview-thumbnail">
-                    <div class="preview-icon bg-primary">
+                    <div class="preview-icon bg-warning">
                       <i class="mdi mdi-file-document"></i>
                     </div>
                   </div>
-                  {% for f in formations %}
+                  </a>
                   <div class="preview-item-content d-sm-flex flex-grow">
                      
                     <div class="flex-grow">
@@ -161,18 +165,21 @@
                   </div>
                 </div>
                 
-                <div class="preview-item border-bottom">
+                {% comment %} <div class="preview-item border-bottom">
+                  <a href="">
                   <div class="preview-thumbnail">
                     <div class="preview-icon bg-warning">
                       <i class="mdi mdi-chart-pie"></i>
                     </div>
-                  </div>
-                 
-                {% endfor %} 
+                  </div> {% endcomment %}
                   
+                 
+               
+                 {% endfor %}  
                 </div>
-                
+                 
               </div>
+              
             </div>
           </div>
         </div>

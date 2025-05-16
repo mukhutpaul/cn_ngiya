@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Statistiques de présences en : {{sel_formation.designaion}}</h4>
+        <p class="card-description"> Nombre de séances : {{nbrseance}} </p>
+        <p class="card-description"> Total aprenant : {{nbrApe}} </p>
+     
+        <div class="row">
+          <div class="" style="margin:-10px">
+              <form action="" method="post" class="forms-sample breadcrumb">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <input type="text" style ="color:white" class="form-control" name="rech" id="rech" placeholder="Recherche ...">
+                  </div>
+                </form>
+          </div>
+
+        </div>
+        <div class="table-responsive">
+          <table class="table table-striped" style ="color:white">
+            <thead>
+              <tr>
+                <th> Id </th>
+                <th> Aprenant</th>
+                <th>Nombre de séances</th>
+                <th>Taux de participation</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for a in apr %}
+              <tr>
+                <td class="py-1">
+                {{forloop.cunter}}
+                </td>
+                <td> {{a.aprenant}} </td>
+                <td>
+                     {{a.Presence.createdat}} 
+                </td>
+                
+               
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <br>
+          {% if list_detailp.has_previous %}
+                <a href="?page=1">&laquo;</a>
+                <a href="?page={{ list_detailp.previous_page_number }}"><span class="badge badge-info ">Précédent</span></a>
+          {% endif %}
+                page {{ list_detailp.number }} sur {{ list_detailp.paginator.num_pages }}
+                <span class="badge badge-info pull-right">{{compte}}</span>
+          
+                {% if list_detailp.has_next %}
+                   <a href="?page={{ list_detailp.next_page_number }}"><span class="badge badge-info ">Suivant</span></a>
+                   <a href="?page={{compte}}">&raquo;</a>
+                {% else %}
+                {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

@@ -24,6 +24,9 @@ def home(request):
     nbrhomme = Aprenant.objects.filter(sexe="M").count()
     nbrFemme = Aprenant.objects.filter(sexe="F").count()
     formations = Formation.objects.all()
+    utilisateurs = User.objects.all().count()
+    
+
     
     data = []
     
@@ -31,6 +34,7 @@ def home(request):
         nbr =AffectationFormation.objects.filter(formation=d).count()
         data.append({
             'formation':d.designaion,
+            'id':d.id,
             'compte': nbr
         })
     
@@ -44,7 +48,8 @@ def home(request):
         'nbrFemme':nbrFemme,
         "noms": request.user.noms,
         "profile": request.user.profile,
-        'formations': data
+        'formations': data,
+        'utilisateurs': utilisateurs 
     }
     
     return render(request,'page/home.html',ctx)
@@ -1074,7 +1079,7 @@ def users(request):
              compte = len(User.objects.all())  
         
     else:
-        p = Paginator(User.objects.all(), 20)
+        p = Paginator(User.objects.all().order_by('-id'), 20)
         page = request.GET.get('page')
         pages =p.get_page(page)
         compte = len(User.objects.all())
@@ -1117,11 +1122,11 @@ def addUser(request):
             msg="Veuillez choisir le profile"
             profiles = Profile.objects.all()
         
-        elif len(User.objects.get(username=username))>0:
+        elif len(User.objects.filter(username=username))>0:
             msg="Ce nom utilisateur existe déjà"
             profiles = Profile.objects.all()
             
-        elif len(User.objects.get(email=email))>0:
+        elif len(User.objects.filter(email=email))>0:
             msg="Cette adresse mail existe déjà"
             profiles = Profile.objects.all() 
         elif noms=='':
@@ -1150,6 +1155,35 @@ def addUser(request):
             #return HttpResponseRedirect('/detailFormateur'+formateur)
         
     return render(request,'formulaire/FUser.html',{'msg':msg,'msok':msok,'pro':profiles})
+
+
+##STATISTIQUES PRESENCES
+
+def statistiquePresence(request,id):
+    compte = 0
+    data = [] 
+    sel_formation = Formation.objects.get(id = id)
+    liste_presence = Presence.objects.filter(formation__id =sel_formation.id).count()
+    nbrApe =AffectationFormation.objects.filter(formation__id=sel_formation.id).count()
+    
+    aprePresence =AffectationFormation.objects.filter(formation__id=sel_formation.id)
+    
+    for apr in aprePresence:
+        pr =DetailPresence.objects.filter(aprenant=apr.aprenant)
+        compte = len(pr)
+        
+        print("KKKKKKK",pr)
+    
+
+    ctx = {
+        'sel_formation':  sel_formation,
+        'compte':compte,
+        'nbrseance': liste_presence,
+        'nbrApe': nbrApe,
+        'apr': pr
+    }
+    
+    return render(request,'page/statistiques.html',ctx)
 
 
 
