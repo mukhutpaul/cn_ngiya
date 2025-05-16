@@ -467,6 +467,10 @@
   <script src="{% static 'js/file-upload.js' %}"></script>
   <script src="{% static 'js/typeahead.js' %}"></script>
   <script src="{% static 'js/select2.js' %}"></script>
+
+   {% block script_of %}
+    <script src="{% static 'js/dashboard.js' %}"></script>
+  {% endblock script_of %}
   </body>
 </html> 
 

@@ -6,39 +6,34 @@
     <div class="card">
       <div class="card-body">
         <h4 class="card-title">Statistiques de présences en : {{sel_formation.designaion}}</h4>
-        <p class="card-description"> Nombre de séances : {{nbrseance}} </p>
-        <p class="card-description"> Total aprenant : {{nbrApe}} </p>
+        <p class="card-description" style="color:white"> Total aprenant : {{nbrApe}} | Hommes : {{nbrH}} | Femmes : {{nbrF}} </p>
+        <p class="card-description" style="color:white"> Nombre de séances : {{nbrseance}} </p>
+        
      
-        <div class="row">
-          <div class="" style="margin:-10px">
-              <form action="" method="post" class="forms-sample breadcrumb">
-                  {% csrf_token %}
-                  <div class="form-group">
-                    <input type="text" style ="color:white" class="form-control" name="rech" id="rech" placeholder="Recherche ...">
-                  </div>
-                </form>
-          </div>
-
-        </div>
         <div class="table-responsive">
+            {% if apr %}
           <table class="table table-striped" style ="color:white">
             <thead>
               <tr>
-                <th> Id </th>
-                <th> Aprenant</th>
-                <th>Nombre de séances</th>
-                <th>Taux de participation</th>
+                <th style="color:white"> Id </th>
+                <th style="color:white"> Aprenant</th>
+                <th style="color:white">Nombre de séances</th>
+                <th style="color:white">Taux de participation</th>
               </tr>
             </thead>
             <tbody>
-                {% for a in apr %}
+                {% for m in apr %}
               <tr>
                 <td class="py-1">
-                {{forloop.cunter}}
+                {{forloop.counter}}
                 </td>
-                <td> {{a.aprenant}} </td>
+                <td> {{m.aprenant__nom}} {{m.aprenant__postnom}} {{m.aprenant__prenom}}</td>
+                <td >
+                     {{m.total}} / {{nbrseance}}
+                </td>
+
                 <td>
-                     {{a.Presence.createdat}} 
+                     {{m.taux}} %
                 </td>
                 
                
@@ -46,12 +41,13 @@
               {% endfor %}
             </tbody>
           </table>
+          {% endif %}
           <br>
           {% if list_detailp.has_previous %}
                 <a href="?page=1">&laquo;</a>
                 <a href="?page={{ list_detailp.previous_page_number }}"><span class="badge badge-info ">Précédent</span></a>
           {% endif %}
-                page {{ list_detailp.number }} sur {{ list_detailp.paginator.num_pages }}
+                Total actif {{ list_detailp.number }}  {{ list_detailp.paginator.num_pages }}
                 <span class="badge badge-info pull-right">{{compte}}</span>
           
                 {% if list_detailp.has_next %}

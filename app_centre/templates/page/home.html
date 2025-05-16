@@ -121,7 +121,8 @@
           </div>
           <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
             <div class="text-md-center text-xl-left">
-              <h6 class="mb-1">Femmes</h6>
+              <h6 class="mb-1 ">Femmes</h6>
+              
               <p class="text-muted mb-0">Total</p>
             </div>
             <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0">
@@ -189,3 +190,89 @@
 
 
 {%endblock content %}
+
+{% block script_of %}
+<script>
+(function($) {
+  'use strict';
+  $.fn.andSelf = function() {
+    return this.addBack.apply(this, arguments);
+  }
+  $(function(){
+    if ($("#transaction-history").length) {
+      var nh = "{{p_homme}}" ;
+      var nf = "{{p_femme}}" ;
+      
+      var areaData = {
+        labels: ["Hemme","Femme"],
+        datasets: [{
+            data: [nh, nf],
+            backgroundColor: [
+              "#00d25b","#ffab00"
+            ]
+          }
+        ]
+      };
+      var areaOptions = {
+        responsive: true,
+        maintainAspectRatio: true,
+        segmentShowStroke: false,
+        cutoutPercentage: 70,
+        elements: {
+          arc: {
+              borderWidth: 0
+          }
+        },      
+        legend: {
+          display: false
+        },
+        tooltips: {
+          enabled: true
+        }
+      }
+      var transactionhistoryChartPlugins = {
+        beforeDraw: function(chart) {
+          var width = chart.chart.width,
+              height = chart.chart.height,
+              ctx = chart.chart.ctx;
+      
+          ctx.restore();
+          var fontSize = 1;
+          ctx.font = fontSize + "rem sans-serif";
+          ctx.textAlign = 'left';
+          ctx.textBaseline = "middle";
+          ctx.fillStyle = "#ffffff";
+      
+          var text = "{{nbrAprenant}}", 
+              textX = Math.round((width - ctx.measureText(text).width) / 2),
+              textY = height / 2.4;
+      
+          ctx.fillText(text, textX, textY);
+
+          ctx.restore();
+          var fontSize = 0.75;
+          ctx.font = fontSize + "rem sans-serif";
+          ctx.textAlign = 'left';
+          ctx.textBaseline = "middle";
+          ctx.fillStyle = "#6c7293";
+
+          // var texts = "Total", 
+          //     textsX = Math.round((width - ctx.measureText(text).width) / 1.93),
+          //     textsY = height / 1.7;
+      
+          // ctx.fillText(texts, textsX, textsY);
+          ctx.save();
+        }
+      }
+      var transactionhistoryChartCanvas = $("#transaction-history").get(0).getContext("2d");
+      var transactionhistoryChart = new Chart(transactionhistoryChartCanvas, {
+        type: 'doughnut',
+        data: areaData,
+        options: areaOptions,
+        plugins: transactionhistoryChartPlugins
+      });
+    }
+  });
+})(jQuery);
+</script>
+{% endblock script_of %}

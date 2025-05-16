@@ -9,9 +9,10 @@ from django.contrib.auth import authenticate,login as auth_login, logout
 
 from app_centre.models import AffectationFormation, AffecteMatiereFormateur, Aprenant, DetailFormation, DetailPresence, Formateur, Formation, Frais, Local, Matiere, Paiement, Presence, Profile, SessionFormation, User
 from django.core.paginator import Paginator
-
+from django.db.models import Count
 from app_centre.utils import render_to_pdf
 from qrcode import *
+from django.db.models import Avg
 
 from cn_ngiya import settings
 
@@ -26,8 +27,9 @@ def home(request):
     formations = Formation.objects.all()
     utilisateurs = User.objects.all().count()
     
-
-    
+    phomme = round((nbrhomme * 100 / nbrAprenant),1)
+    pfemme = round((nbrFemme * 100 / nbrAprenant),1)
+   
     data = []
     
     for d in formations:
@@ -49,6 +51,8 @@ def home(request):
         "noms": request.user.noms,
         "profile": request.user.profile,
         'formations': data,
+        "p_homme" : json.dumps(phomme),
+        "p_femme" : json.dumps(pfemme),
         'utilisateurs': utilisateurs 
     }
     
@@ -1162,26 +1166,33 @@ def addUser(request):
 def statistiquePresence(request,id):
     compte = 0
     data = [] 
+    nbrfois = 0
     sel_formation = Formation.objects.get(id = id)
     liste_presence = Presence.objects.filter(formation__id =sel_formation.id).count()
     nbrApe =AffectationFormation.objects.filter(formation__id=sel_formation.id).count()
     
-    aprePresence =AffectationFormation.objects.filter(formation__id=sel_formation.id)
+    nbrH =AffectationFormation.objects.filter(formation__id=sel_formation.id,aprenant__sexe="M").count()
+    nbrF =AffectationFormation.objects.filter(formation__id=sel_formation.id,aprenant__sexe="F").count()
+   
     
-    for apr in aprePresence:
-        pr =DetailPresence.objects.filter(aprenant=apr.aprenant)
-        compte = len(pr)
-        
-        print("KKKKKKK",pr)
+    v =DetailPresence.objects.values('aprenant__nom','aprenant__postnom',
+    'aprenant__prenom').filter(Presence__formation=sel_formation).annotate(total=Count('id'),taux=Count('id')*100/liste_presence).order_by('aprenant__nom')
     
+    myn = DetailPresence.objects.aggregate(Avg("id", default=0))
+    print("Mukhut",myn)
+    
+   
 
     ctx = {
         'sel_formation':  sel_formation,
-        'compte':compte,
+        'compte':len(v),
         'nbrseance': liste_presence,
         'nbrApe': nbrApe,
-        'apr': pr
+        'apr': v,
+        'nbrH': nbrH,
+        'nbrF': nbrF
     }
+   
     
     return render(request,'page/statistiques.html',ctx)
 
