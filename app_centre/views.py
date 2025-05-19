@@ -414,12 +414,6 @@ def addpaiement(request):
             
     return render(request,'formulaire/FPaiement.html',{'msg':msg,'frs': frs,'apr': apr,'msk':msk})
 
-#Delete paie
-def deletePaie(request,id):
-    p = Paiement.objects.get(pk=id)
-    p.delete()
-    return HttpResponseRedirect('/paie/')
-
 
 ##Formulaire Matière
 @login_required(login_url="sign_in")
@@ -647,6 +641,33 @@ def addDetailPresence(request):
             ap.save()
             return HttpResponseRedirect('/detaiPresence'+presence)
     return HttpResponseRedirect('/detaiPresence'+presence)
+
+#ADD DETAIL FORMATION
+def addDetailFormation(request):
+    if request.method == 'POST':
+        msg = None
+        matiere = request.POST.get("matiere",None)
+        formateur = request.POST.get("formateur",None)
+        formation = request.POST.get("formation",None)
+        
+        print("#############",presence)
+        if matiere =='':
+            msg = "Veuillez saisir la matière"
+        elif  formateur =='':
+            msg="Veuillez saisir le formateur"
+
+        else:
+            format= Formateur.objects.get(pk=formateur)
+            mat = Matiere.objects.get(pk=matiere)
+            formt = Formation.objects.get(pk=formation)
+            ap = DetailFormation(
+                    matiere = mat,
+                    formateur =format ,
+                    formation = formt,
+                ) 
+            ap.save()
+            return HttpResponseRedirect('/detailFormation'+formation)
+    return HttpResponseRedirect('/detailFormation'+formation)
 
 #Detail Aprenant
 def detailAprenant(request,id):
@@ -1195,6 +1216,157 @@ def statistiquePresence(request,id):
    
     
     return render(request,'page/statistiques.html',ctx)
+
+######SUPPRESSION
+#Delete paie
+def deletePaie(request,id):
+    p = Paiement.objects.get(pk=id)
+    p.delete()
+    return HttpResponseRedirect('/paie/')
+
+#Delete paie
+def deleteUser(request,id):
+    user = User.objects.get(pk=id)
+    user.delete()
+    return HttpResponseRedirect('/users/')
+
+#Delete APRENANT
+def deleteAprenant(request,id):
+    p = Aprenant.objects.get(pk=id)
+    verifie = AffectationFormation.objects.filter(aprenant=p)
+    msg = None
+    
+    if len(verifie)>0:
+        pass
+        msg = "Cet aprenant est déjà lié à une formation veuillez lui ôter cette formation avant la suppression"
+    else:
+        p.delete()
+        return HttpResponseRedirect('/aprenant/')
+    return HttpResponseRedirect('/aprenant/')
+
+#Delete Matière
+def deleteMatiere(request,id):
+    m = Matiere.objects.get(pk=id)
+    verifie = AffecteMatiereFormateur.objects.filter(matiere=m)
+    p = Presence.objects.filter(matiere=m)
+    msg = None
+    
+    if len(verifie)>0 or len(p)>0:
+        pass
+        msg = "Cet matière est déjà lié à une formation veuillez l'ôter cette formation avant la suppression"
+    else:
+        m.delete()
+        return HttpResponseRedirect('/matiere/')
+    return HttpResponseRedirect('/matiere/')
+
+#Delete Formateur
+def deleteFormateur(request,id):
+    f = Formateur.objects.get(pk=id)
+    verifie = AffecteMatiereFormateur.objects.filter(formateur=f)
+    df = DetailFormation.objects.filter(formateur=f)
+  
+    msg = None
+    
+    if len(verifie)>0 or len(df)>0:
+        pass
+        msg = "Ce formateur est déjà lié à une matière veuillez lui ôter cette matière avant la suppression"
+    else:
+        f.delete()
+        return HttpResponseRedirect('/formateur/')
+    return HttpResponseRedirect('/formateur/')
+
+#Delete Formateur
+def deletePresence(request,id):
+    p = Presence.objects.get(pk=id)
+    verifie = DetailPresence.objects.filter(Presence=p)
+  
+    msg = None
+    
+    if len(verifie)>0:
+        pass
+        msg = "Cette présence est en cours d'utilisation veuillez detacher les aprenants liés à cette dernière avant la suppression"
+    else:
+        p.delete()
+        return HttpResponseRedirect('/presence/')
+    return HttpResponseRedirect('/presence/')
+
+#Delete Local
+def deleteLocal(request,id):
+    l = Local.objects.get(pk=id)
+    verifie = SessionFormation.objects.filter(local=l)
+  
+    msg = None
+    
+    if len(verifie)>0:
+        pass
+        msg = "Ce local est déjà lié à une session, impossible de le supprimer"
+    else:
+        l.delete()
+        return HttpResponseRedirect('/local/')
+    return HttpResponseRedirect('/local/')
+
+#Delete Formateur
+def deleteFormation(request,id):
+    f = Formateur.objects.get(pk=id)
+    verifie = AffecteMatiereFormateur.objects.filter(formation=f)
+    df = DetailFormation.objects.filter(formation=f)
+    pf = Presence.objects.filter(formation=f)
+  
+    msg = None
+    
+    if len(verifie)>0 or len(df)>0 or len(pf)>0:
+        pass
+        msg = "Cette formation est déjà liée soit à la préence,ou à l'une d'affectation"
+    else:
+        f.delete()
+        return HttpResponseRedirect('/formation/')
+    return HttpResponseRedirect('/formation/')
+
+#Delete Formateur
+def deleteFrais(request,id):
+    f = Frais.objects.get(pk=id)
+    verifie = Paiement.objects.filter(frais=f)
+  
+    msg = None
+    
+    if len(verifie)>0:
+        pass
+        msg = "Ce frais est déjà lié à un paiement, impossible de le supprimer"
+    else:
+        f.delete()
+        return HttpResponseRedirect('/frais/')
+    return HttpResponseRedirect('/frais/')
+
+def deletedetailFormation(request,id):
+    df = DetailFormation.objects.get(pk=id)
+    dt = Formation.objects.get(pk=df.formation.id)
+    df.delete()
+    id_formation = dt.id
+    return redirect('/detailFormation'+str(id_formation))
+
+def deletedetailPresence(request,id):
+    dp = DetailPresence.objects.get(pk=id)
+    p = Presence.objects.get(pk=dp.Presence.id)
+    dp.delete()
+    id_presence = p.id
+    return redirect('/detaiPresence'+str(id_presence))
+
+def deletedetailFormateur(request,id):
+    df = AffecteMatiereFormateur.objects.get(pk=id)
+    f = Formateur.objects.get(pk=df.formateur.id)
+    df.delete()
+    id_formateur = f.id
+    return redirect('/detailFormateur'+str(id_formateur))
+
+def deletedetailAprenant(request,id):
+    df = AffectationFormation.objects.get(pk=id)
+    apr = Aprenant.objects.get(pk=df.aprenant.id)
+    df.delete()
+    id_aprenat = apr.id
+    return redirect('/detailAprenant'+ str(id_aprenat))
+
+
+
 
 
 

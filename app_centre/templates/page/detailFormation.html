@@ -10,11 +10,11 @@
         <p class="card-description"> Durée : {{sel_formation.duree}} </p>
         <p class="card-description"> Date de création : {{sel_formation.createdat}} </p>
         <label>Matière</label>
-        <form class="forms-sample" method="post" action="{% url 'addFormation' %}">
+        <form class="forms-sample" method="post" action="{% url 'addDetailFormation' %}">
             {% csrf_token %}
         <div class="row">
             <div class="col-6">
-                  <input hidden value="{{sel_formation.id}}" name ="formation">
+                  <input hidden value="{{sel_formation.id}}" name="formation">
                     <div class="form-group"> 
                         <select class="js-example-basic-single" style="width:100%" name="matiere">
                           <option value="">Choisir la matiere</option>
@@ -80,8 +80,7 @@
                 </td>
                 <td> {{df.createdat}}  </td>
                 <td>
-                    <a href="" onclick="return confirm('Etes-vous sûr de vouloir supprimer?')"> <i class="mdi mdi-delete"></i></a>
-                    <a href=""><i class="mdi mdi-table-edit"></i></a>
+                    <a href="{% url 'deletedetailFormation' df.id %}" onclick="return confirm('Etes-vous sûr de vouloir supprimer?')"> <i class="mdi mdi-delete"></i></a>
                 </td>
                
               </tr>

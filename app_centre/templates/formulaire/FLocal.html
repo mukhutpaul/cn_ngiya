@@ -3,12 +3,15 @@
 
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
         <h4 class="card-title">Formulaire d'ajout de local</h4>
         <p class="card-description"> Information </p>
-        <form class="forms-sample" method="post" action="{% url 'addFormation' %}">
+        <form class="forms-sample" method="post" action="{% url 'addFormation' %}" 
+        name="formValidation" id="formValidation">
             {% csrf_token %}
         <div class="row">
             <div class="col-6">
@@ -16,7 +19,7 @@
                     
                    <div class="form-group">
                     <label for="exampleInputCity1">Designation</label>
-                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Désignation" name="designation">
+                    <input type="text" style="color:white" class="form-control" id="designation" placeholder="Désignation" name="designation">
                   </div>
             </div>
 
@@ -52,11 +55,33 @@
             </div>
         </div>
 
-          <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
+          <button type="submit" value="Submit" class="btn btn-primary mr-2">Enregistrer</button>
           <a style ="color:white" class="btn btn-primary mr-2" href="{% url 'local' %}">Retour</a>
         </form>
       </div>
     </div>
   </div>
+
+  {% block validations %}
+  <script>
+  $("#formValidation").validate({
+    rules : {
+       designation:{
+        minlength: 2,
+      },
+    },
+    messages : {
+      designation:{
+        required: "Please enter the local designation",
+        minlength: "Name at least 2 caracters"
+      }
+    
+    },
+      submitHandler: function(form) {
+        form.submit();
+      }
+    });
+   </script>
+{% endblock validations %}
 
 {% endblock content %}

@@ -46,7 +46,7 @@
                 <td> {{f.prenom}}  </td>
                 <td> {{f.sexe}} </td>
                 <td>
-                    <a href="" onclick="return confirm('Etes-vous sûr de vouloir supprimer?')"> <i class="mdi mdi-delete"></i></a>
+                    <a href="{% url 'deleteFormateur' f.id %}" onclick="return confirm('Etes-vous sûr de vouloir supprimer?')"> <i class="mdi mdi-delete"></i></a>
                     <a href=""><i class="mdi mdi-table-edit"></i></a>
                 </td>
                

@@ -42,7 +42,7 @@
                      {{m.nombreHeure}} 
                 </td>
                 <td>
-                    <a href="" onclick="return confirm('Etes-vous sûr de vouloir supprimer?')"> <i class="mdi mdi-delete"></i></a>
+                    <a href="{% url 'deleteMatiere' m.id %}" onclick="return confirm('Etes-vous sûr de vouloir supprimer?')"> <i class="mdi mdi-delete"></i></a>
                     <a href=""><i class="mdi mdi-table-edit"></i></a>
                 </td>
                

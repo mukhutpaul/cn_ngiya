@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app_centre.views import addAprenant, addDetailAprenant, addDetailFormateur, addDetailPresence, addFormateur, addFormation, addFrais, addLocal, addMatiere, addUser, addpaiement, addpresence, aprenant, deletePaie, detaiPresence, detailAprenant, detailFormateur, detailFormation, fAprenant, fFormateur, fFormation, fFrais, fUser, flocal, fmatiere, formateur, formation, fpaiement, fpresence, frais, home, local, log_out, login, matiere, paiement, presence, print_recu, sign_in, statistiquePresence, users
+from app_centre.views import addAprenant, addDetailAprenant, addDetailFormateur, addDetailFormation, addDetailPresence, addFormateur, addFormation, addFrais, addLocal, addMatiere, addUser, addpaiement, addpresence, aprenant, deleteAprenant, deleteFormateur, deleteLocal, deleteMatiere, deletePaie, deletePresence, deleteUser, deletedetailAprenant, deletedetailFormateur, deletedetailFormation, deletedetailPresence, detaiPresence, detailAprenant, detailFormateur, detailFormation, fAprenant, fFormateur, fFormation, fFrais, fUser, flocal, fmatiere, formateur, formation, fpaiement, fpresence, frais, home, local, log_out, login, matiere, paiement, presence, print_recu, sign_in, statistiquePresence, users
 
 
 urlpatterns = [
@@ -42,8 +42,7 @@ urlpatterns = [
    path('fpaiement/', fpaiement, name="fpaiement"),
    path('addpaiement/', addpaiement, name="addpaiement"),
    
-   #Delete paie
-   path('deletePaie<int:id>/',deletePaie, name="deletePaie"),
+
    path('presence/',presence, name="presence"),
    path('addDetailPresence/',addDetailPresence, name="addDetailPresence"),
    
@@ -88,6 +87,9 @@ urlpatterns = [
    ##DETAIL FORMATEUR
    path('detailFormateur<int:id>/',detailFormateur, name="detailFormateur"),
    path('addDetailFormateur/',addDetailFormateur, name="addDetailFormateur"),
+   path('addDetailFormation/',addDetailFormation, name="addDetailFormation"),
+   
+   
    
    ##USERS
    path('users/',users, name="users"),
@@ -96,6 +98,49 @@ urlpatterns = [
    
    ##STATISTIQUES PRESENCES
    path('statistiquePresence<int:id>/',statistiquePresence, name="statistiquePresence"),
+   
+   ##SUPPRESSION
+   #Delete paie
+   path('deletePaie<int:id>/',deletePaie, name="deletePaie"),
+   #Delete Aprenant
+   path('deleteAprenant<int:id>/',deleteAprenant, name="deleteAprenant"),
+   
+   #Delete Matière
+   path('deleteMatiere<int:id>/',deleteMatiere, name="deleteMatiere"),
+   #Delete Formateur
+   path('deleteFormateur<int:id>/',deleteFormateur, name="deleteFormateur"),
+   
+   #Delete Présence
+   path('deletePresence<int:id>/',deletePresence, name="deletePresence"),
+   #Delete Local
+   path('deleteLocal<int:id>/',deleteLocal, name="deleteLocal"),
+   
+   #Delete users
+   path('deleteUser<int:id>/',deleteUser, name="deleteUser"),
+   
+   path('deletedetailFormation<int:id>/',deletedetailFormation, name="deletedetailFormation"),
+   path('deletedetailPresence<int:id>/',deletedetailPresence, name="deletedetailPresence"),
+   path('deletedetailFormateur<int:id>/',deletedetailFormateur, name="deletedetailFormateur"),
+   
+   path('deletedetailAprenant<int:id>/',deletedetailAprenant, name="deletedetailAprenant"),
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
    
    
    
