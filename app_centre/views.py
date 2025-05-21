@@ -1537,7 +1537,7 @@ def updateFormateur(request,id):
             formateur.Etatcivil = etatciv.upper()
             formateur.niveauEtude = niveau.upper()
             formateur.telephone = telephone.upper()
-            formateur.email = email,
+            formateur.email = email
             formateur.adresse = adresse.upper()
             
             formateur.save()
@@ -1549,6 +1549,45 @@ def updateFormateur(request,id):
         'mesok': mesok 
     }   
     return render(request,'formulaire/FFormateur.html',ctx)
+
+##FRAIS
+def modifierFrais(request,id):
+    frais= Frais.objects.get(pk=id)
+    
+    ctx ={
+        'frais': frais
+    }
+    return render(request,'formulaire/FFrais.html',ctx)
+
+
+##UPDATE FRAIS
+def updateFrais(request,id):
+    frais = Frais.objects.get(id=id)
+    msg = None
+    msok = None
+    
+    if request.method == 'POST':
+        designat = request.POST.get("designation",None)
+        cout = request.POST.get("cout",None)
+        
+        if designat == '':
+            msg ="Veuillez remplir la désignation"
+        elif cout == '':
+            msg ="Veuillez remplir le coût"
+        elif len(cout)>3:
+            msg ="le coût ne peut pas être supérieur à 3 caractères"
+        else:
+            frais.designation = designat.upper()
+            frais.cout = cout
+            frais.save()
+            msok ="Traitement ok"
+            #return HttpResponseRedirect('/matiere/')
+    ctx ={
+        'frais': frais,
+        'msg':msg,
+        'msok': msok 
+    }
+    return render(request,'formulaire/FFrais.html',ctx)
 
 
 

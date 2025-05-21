@@ -6,9 +6,9 @@
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Formulaire d'ajout de frais</h4>
+        <h4 class="card-title">{% if frais %} Modification {% else %}Formulaire d'ajout de frais{% endif %}</h4>
         <p class="card-description"> Information </p>
-        <form class="forms-sample" method="post" action="{% url 'addFrais' %}">
+        <form class="forms-sample" method="post" action="{% if frais %} {% url 'updateFrais' frais.id %} {% else %}{% url 'addFrais' %} {% endif %}">
             {% csrf_token %}
         <div class="row">
             <div class="col-6">
@@ -16,14 +16,14 @@
                     
                    <div class="form-group">
                     <label for="exampleInputCity1">Designation</label>
-                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Désignation" name="designation">
+                    <input type="text" style="color:white" value="{{frais.designation}}" class="form-control" id="exampleInputCity1" placeholder="Désignation" name="designation">
                   </div>
             </div>
 
             <div class="col-6">
               <div class="form-group">
                     <label for="exampleInputCity1">Coût</label>
-                    <input type="number" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Coût" name="cout">
+                    <input type="number" value="{{frais.cout}}" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Coût" name="cout">
                 </div>
               {% if msg %}
                     <script>
@@ -52,7 +52,7 @@
             </div>
         </div>
 
-          <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
+          <button type="submit" class="btn btn-primary mr-2">{% if frais %}Modifier {% else %}Enregistrer {% endif %}</button>
           <a style ="color:white" class="btn btn-primary mr-2" href="{% url 'frais' %}">Retour</a>
         </form>
       </div>
