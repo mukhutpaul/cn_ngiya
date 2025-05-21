@@ -1366,7 +1366,7 @@ def deletedetailAprenant(request,id):
     return redirect('/detailAprenant'+ str(id_aprenat))
 
 ###MODIFICATIONS 
-
+##aprenant
 def modifierAprenant(request,id):
     aprenant= Aprenant.objects.get(pk=id)
     
@@ -1396,7 +1396,7 @@ def updateAprenant(request,id):
         email = request.POST.get("email",None)
         telephone  = request.POST.get("telephone",None)
         sexe  = request.POST.get("sexe",None)
-        
+     
         if nom == '':
             msg ="Veuillez remplir le nom"
         elif postnom == '':
@@ -1422,22 +1422,20 @@ def updateAprenant(request,id):
         elif sexe == '':
             msg ="Veuillez remplir le sexe"
         else:
-            aprenant.nom = nom.upper(),
-            aprenant.postnom = postnom.upper(),
-            aprenant.prenom = prenom.upper(),
-            aprenant.lieunaissance = lieu.upper(),
-            aprenant.datenaissance = datenais,
-            aprenant.sexe = sexe.upper(),
-            aprenant.Etatcivil = etatciv.upper(),
-            aprenant.niveauEtude = niveau.upper(),
-            aprenant.telephone = telephone.upper(),
-            aprenant.email = email,
-            aprenant.langue = langue.upper(),
+            aprenant.nom = nom.upper()
+            aprenant.postnom = postnom.upper()
+            aprenant.prenom = prenom.upper()
+            aprenant.lieunaissance = lieu.upper()
+            aprenant.datenaissance = datenais
+            aprenant.sexe = sexe.upper()
+            aprenant.Etatcivil = etatciv.upper()
+            aprenant.niveauEtude = niveau.upper()
+            aprenant.telephone = telephone.upper()
+            aprenant.email = email
+            aprenant.langue = langue.upper()
             aprenant.adresse = adresse.upper()
             
             aprenant.save()
-            print(aprenant.nom)
-        
             mesok = nom + " "+postnom+" modifié avec succès"
             #return HttpResponseRedirect('/aprenant/')
     ctx ={
@@ -1445,6 +1443,84 @@ def updateAprenant(request,id):
         'mesok': mesok 
     }
     return render(request,'formulaire/FAprenant.html',ctx)
+
+
+##Matière
+def modifierMatiere(request,id):
+    matietere= Matiere.objects.get(pk=id)
+    
+    ctx ={
+        'matiere': aprenant
+    }
+    return render(request,'formulaire/Matiere.html',ctx)
+
+
+##UPDATE APPRENANT
+def updateAprenant(request,id):
+    aprenant= Aprenant.objects.get(id=id)
+    if request.method == 'POST':
+        msg = None
+        mesok =None
+        nom = request.POST.get('nom',None)
+        postnom = request.POST.get('postnom',None)
+        prenom = request.POST.get("prenom",None)
+        lieu = request.POST.get("lieu",None)
+        datenais = request.POST.get("datenais",None)
+        langue = request.POST.get("langue",None)
+        etatciv = request.POST.get("etatciv",None)
+        niveau = request.POST.get("niveau",None)
+        adresse = request.POST.get("adresse",None)
+        email = request.POST.get("email",None)
+        telephone  = request.POST.get("telephone",None)
+        sexe  = request.POST.get("sexe",None)
+     
+        if nom == '':
+            msg ="Veuillez remplir le nom"
+        elif postnom == '':
+            msg ="Veuillez remplir le postnom"
+        elif prenom == '':
+            msg ="Veuillez remplir le prenom"
+        elif lieu == '':
+            msg ="Veuillez remplir le lieu de naissance"
+        elif datenais == '':
+            msg ="Veuillez remplir la date de naissance"
+        elif langue == '':
+            msg ="Veuillez choisir la langue"
+        elif etatciv == '':
+            msg ="Veuillez remplir l'état civil"
+        elif niveau == '':
+            msg ="Veuillez remplir l'état civil"
+        elif telephone == '':
+            msg ="Veuillez remplir le téléphone"
+        elif adresse == '':
+            msg ="Veuillez remplir l'adresse"
+        elif email == '':
+            msg ="Veuillez remplir le mail"
+        elif sexe == '':
+            msg ="Veuillez remplir le sexe"
+        else:
+            aprenant.nom = nom.upper()
+            aprenant.postnom = postnom.upper()
+            aprenant.prenom = prenom.upper()
+            aprenant.lieunaissance = lieu.upper()
+            aprenant.datenaissance = datenais
+            aprenant.sexe = sexe.upper()
+            aprenant.Etatcivil = etatciv.upper()
+            aprenant.niveauEtude = niveau.upper()
+            aprenant.telephone = telephone.upper()
+            aprenant.email = email
+            aprenant.langue = langue.upper()
+            aprenant.adresse = adresse.upper()
+            
+            aprenant.save()
+            mesok = nom + " "+postnom+" modifié avec succès"
+            #return HttpResponseRedirect('/aprenant/')
+    ctx ={
+        'msg':msg,
+        'mesok': mesok 
+    }
+    return render(request,'formulaire/FAprenant.html',ctx)
+
 
 
 

@@ -43,9 +43,9 @@
                     <select class="js-example-basic-single" style="width:100%" name="sexe">
                     {% if aprenant %} {% else %} <option value="">--------------</option> {% endif %}
                     <option value="
-                    {% if aprenant.sexe == 'M' %} M
-                      {% elif aprenant.sexe == 'F' %} F
-                      {% endif %}
+                    {% if aprenant.sexe == 'M' %} selected
+                    {% elif aprenant.sexe == 'F' %} selected
+                    {% endif %}
                     ">
                       {% if aprenant.sexe == 'M' %} HOMME
                       {% elif aprenant.sexe == 'F' %} FEMME
@@ -64,11 +64,11 @@
                     <select class="js-example-basic-single" style="width:100%" name="etatciv">
                     {% if aprenant %} {% else %} <option value="">--------------</option> {% endif %}
                     <option value="
-                    {% if aprenant.Etatcivil  == 'CELIBATAIRE' %} {{aprenant.Etatcivil}}
-                      {% elif aprenant.Etatcivil  == 'MARIE'%} {{aprenant.Etatcivil}}
-                      {% elif aprenant.Etatcivil  == 'VEUF'%} {{aprenant.Etatcivil}}
-                      {% elif aprenant.Etatcivil  == 'VEUF'%} {{aprenant.Etatcivil}}
-                      {% elif aprenant.Etatcivil  == 'DIVORCE'%} {{aprenant.Etatcivil}}
+                    {% if aprenant.Etatcivil  == 'CELIBATAIRE' %} selected
+                      {% elif aprenant.Etatcivil  == 'MARIE'%} selected
+                      {% elif aprenant.Etatcivil  == 'VEUF'%} selected
+                      {% elif aprenant.Etatcivil  == 'VEUF'%} selected
+                      {% elif aprenant.Etatcivil  == 'DIVORCE'%} selected
                       {% endif %}
                     ">
                       {% if aprenant.Etatcivil  == 'CELIBATAIRE' %} {{aprenant.Etatcivil}}
@@ -108,9 +108,9 @@
                       <option value="">----------------</option>
                     {% endif %}
                     <option value="
-                      {% if aprenant.langue  == 'FRANCAIS' %} {{aprenant.langue}}
-                      {% elif aprenant.langue  == 'ANGLAIS' %} {{aprenant.langue}}
-                      {% elif aprenant.langue  == 'AUTRES' %} {{aprenant.langue}}
+                      {% if aprenant.langue  == 'FRANCAIS' %} selected
+                      {% elif aprenant.langue  == 'ANGLAIS' %} selected
+                      {% elif aprenant.langue  == 'AUTRES' %} selected
                       {% endif %}
                     ">
                       {% if aprenant.langue  == 'FRANCAIS' %} {{aprenant.langue}}
