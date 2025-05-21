@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app_centre.views import addAprenant, addDetailAprenant, addDetailFormateur, addDetailFormation, addDetailPresence, addFormateur, addFormation, addFrais, addLocal, addMatiere, addUser, addpaiement, addpresence, aprenant, deleteAprenant, deleteFormateur, deleteLocal, deleteMatiere, deletePaie, deletePresence, deleteUser, deletedetailAprenant, deletedetailFormateur, deletedetailFormation, deletedetailPresence, detaiPresence, detailAprenant, detailFormateur, detailFormation, fAprenant, fFormateur, fFormation, fFrais, fUser, flocal, fmatiere, formateur, formation, fpaiement, fpresence, frais, home, local, log_out, login, matiere, paiement, presence, print_recu, sign_in, statistiquePresence, users
+from app_centre.views import addAprenant, addDetailAprenant, addDetailFormateur, addDetailFormation, addDetailPresence, addFormateur, addFormation, addFrais, addLocal, addMatiere, addUser, addpaiement, addpresence, aprenant, deleteAprenant, deleteFormateur, deleteLocal, deleteMatiere, deletePaie, deletePresence, deleteUser, deletedetailAprenant, deletedetailFormateur, deletedetailFormation, deletedetailPresence, detaiPresence, detailAprenant, detailFormateur, detailFormation, fAprenant, fFormateur, fFormation, fFrais, fUser, flocal, fmatiere, formateur, formation, fpaiement, fpresence, frais, home, local, log_out, login, matiere, modifierAprenant, paiement, presence, print_recu, sign_in, statistiquePresence, updateAprenant, users
 
 
 urlpatterns = [
@@ -123,6 +123,11 @@ urlpatterns = [
    path('deletedetailFormateur<int:id>/',deletedetailFormateur, name="deletedetailFormateur"),
    
    path('deletedetailAprenant<int:id>/',deletedetailAprenant, name="deletedetailAprenant"),
+   
+   
+   ##MODIFICATIONS
+   path('modifierAprenant<int:id>/',modifierAprenant, name="modifierAprenant"),
+   path('updateAprenant<int:id>/',updateAprenant, name="updateAprenant"),
    
    
    
