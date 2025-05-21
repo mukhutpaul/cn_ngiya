@@ -1447,45 +1447,76 @@ def updateAprenant(request,id):
 
 ##Matière
 def modifierMatiere(request,id):
-    matietere= Matiere.objects.get(pk=id)
+    matiere= Matiere.objects.get(pk=id)
     
     ctx ={
-        'matiere': aprenant
+        'matiere': matiere
     }
-    return render(request,'formulaire/Matiere.html',ctx)
+    return render(request,'formulaire/FMatiere.html',ctx)
 
 
 ##UPDATE APPRENANT
-def updateAprenant(request,id):
-    aprenant= Aprenant.objects.get(id=id)
+def updateMatiere(request,id):
+    matiere= Matiere.objects.get(id=id)
+    if request.method == 'POST':
+        msg = None
+        msok =None
+        
+        designation = request.POST.get('matiere',None)
+        nombreHeure = request.POST.get('heure',None)
+     
+        if designation == '':
+            msg ="Veuillez remplir la designation"
+        elif nombreHeure == '':
+            msg ="Veuillez remplir le volume horaire"
+        else:
+           matiere.designation = designation.upper()
+           matiere.nombreHeure = nombreHeure
+            
+           matiere.save()
+           msok = designation +" modifié avec succès"
+            #return HttpResponseRedirect('/aprenant/')
+    ctx ={
+        'msg':msg,
+        'msok': msok 
+    }
+    return render(request,'formulaire/FMatiere.html',ctx)
+
+##Matière
+def modifierFormateur(request,id):
+    formateur= Formateur.objects.get(pk=id)
+    
+    ctx ={
+        'formateur': formateur
+    }
+    return render(request,'formulaire/FFormateur.html',ctx)
+
+
+##UPDATE FORMATEUR
+def updateFormateur(request,id):
+    formateur= Formateur.objects.get(id=id)
+    msg = None
+    mesok = None
+    
     if request.method == 'POST':
         msg = None
         mesok =None
-        nom = request.POST.get('nom',None)
-        postnom = request.POST.get('postnom',None)
+        nom = request.POST.get("nom",None)
+        postnom = request.POST.get("postnom",None)
         prenom = request.POST.get("prenom",None)
-        lieu = request.POST.get("lieu",None)
-        datenais = request.POST.get("datenais",None)
-        langue = request.POST.get("langue",None)
         etatciv = request.POST.get("etatciv",None)
         niveau = request.POST.get("niveau",None)
         adresse = request.POST.get("adresse",None)
         email = request.POST.get("email",None)
         telephone  = request.POST.get("telephone",None)
         sexe  = request.POST.get("sexe",None)
-     
+        
         if nom == '':
             msg ="Veuillez remplir le nom"
         elif postnom == '':
             msg ="Veuillez remplir le postnom"
         elif prenom == '':
             msg ="Veuillez remplir le prenom"
-        elif lieu == '':
-            msg ="Veuillez remplir le lieu de naissance"
-        elif datenais == '':
-            msg ="Veuillez remplir la date de naissance"
-        elif langue == '':
-            msg ="Veuillez choisir la langue"
         elif etatciv == '':
             msg ="Veuillez remplir l'état civil"
         elif niveau == '':
@@ -1498,28 +1529,37 @@ def updateAprenant(request,id):
             msg ="Veuillez remplir le mail"
         elif sexe == '':
             msg ="Veuillez remplir le sexe"
-        else:
-            aprenant.nom = nom.upper()
-            aprenant.postnom = postnom.upper()
-            aprenant.prenom = prenom.upper()
-            aprenant.lieunaissance = lieu.upper()
-            aprenant.datenaissance = datenais
-            aprenant.sexe = sexe.upper()
-            aprenant.Etatcivil = etatciv.upper()
-            aprenant.niveauEtude = niveau.upper()
-            aprenant.telephone = telephone.upper()
-            aprenant.email = email
-            aprenant.langue = langue.upper()
-            aprenant.adresse = adresse.upper()
+        else:     
+            formateur.nom = nom.upper()
+            formateur.postnom = postnom.upper()
+            formateur.prenom = prenom.upper()
+            formateur.sexe = sexe.upper()
+            formateur.Etatcivil = etatciv.upper()
+            formateur.niveauEtude = niveau.upper()
+            formateur.telephone = telephone.upper()
+            formateur.email = email,
+            formateur.adresse = adresse.upper()
             
-            aprenant.save()
-            mesok = nom + " "+postnom+" modifié avec succès"
+            formateur.save()
+            mesok = nom + " "+postnom+" est modifié  avec succès"
             #return HttpResponseRedirect('/aprenant/')
     ctx ={
+        'formateur':formateur,
         'msg':msg,
         'mesok': mesok 
-    }
-    return render(request,'formulaire/FAprenant.html',ctx)
+    }   
+    return render(request,'formulaire/FFormateur.html',ctx)
+
+
+
+
+
+
+
+
+
+
+
 
 
 

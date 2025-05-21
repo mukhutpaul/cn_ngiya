@@ -6,31 +6,40 @@
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Formulaire d'ajout d'un formateur</h4>
+        <h4 class="card-title">{% if formateur %} Modification {% else %} Formulaire d'ajout d'un formateur {% endif %}</h4>
         <p class="card-description"> Information </p>
-        <form class="forms-sample" method="post" action="{% url 'addFormateur' %}">
+        <form class="forms-sample" method="post" action="{% if formateur %} {% url 'updateFormateur' formateur.id %} {% else %}{% url 'addFormateur' %} {% endif %}">
             {% csrf_token %}
         <div class="row">
             <div class="col-6">
                    
                    <div class="form-group">
                     <label for="exampleInputCity1">Nom</label>
-                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="nom" name="nom">
+                    <input type="text" style="color:white" value = "{{formateur.nom }}" class="form-control" id="exampleInputCity1" placeholder="nom" name="nom">
                   </div>
 
                    <div class="form-group">
                     <label for="exampleInputCity1">Post-Nom</label>
-                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="post-nom" name="postnom">
+                    <input type="text" value = "{{formateur.postnom }}"  style="color:white" class="form-control" id="exampleInputCity1" placeholder="post-nom" name="postnom">
                   </div>
 
                    <div class="form-group">
                     <label for="exampleInputCity1">Prenom</label>
-                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="prénom" name="prenom">
+                    <input type="text" value = "{{formateur.prenom }}"  style="color:white" class="form-control" id="exampleInputCity1" placeholder="prénom" name="prenom">
                   </div>
-                <div class="form-group">
+                 <div class="form-group">
                  <label>Sexe</label>
                     <select class="js-example-basic-single" style="width:100%" name="sexe">
-                    <option value="">--------------</option>
+                    {% if formateur %} {% else %} <option value="">--------------</option> {% endif %}
+                    <option value="
+                    {% if formaeur.sexe == 'M' %} selected
+                    {% elif formateur.sexe == 'F' %} selected
+                    {% endif %}
+                    ">
+                      {% if formateur.sexe == 'M' %} HOMME
+                      {% elif formateur.sexe == 'F' %} FEMME
+                      {% endif %}
+                    </option>
                     <option value="M">HOMME</option> 
                     <option value="F">FEMME</option> 
                    
@@ -39,36 +48,44 @@
             </div>
 
             <div class="col-6">
-                  <div class="form-group">
+                   <div class="form-group">
                  <label>Etat civil</label>
                     <select class="js-example-basic-single" style="width:100%" name="etatciv">
-                    <option value="">--------------</option>
+                    {% if formateur %} {% else %} <option value="">--------------</option> {% endif %}
+                    <option value="
+                    {% if formateur.Etatcivil  == 'CELIBATAIRE' %} selected
+                      {% elif formateur.Etatcivil  == 'MARIE'%} selected
+                      {% elif formateur.Etatcivil  == 'VEUF'%} selected
+                      {% elif formateur.Etatcivil  == 'VEUF'%} selected
+                      {% elif formateur.Etatcivil  == 'DIVORCE'%} selected
+                      {% endif %}
+                    ">
+                      {% if formateur.Etatcivil  == 'CELIBATAIRE' %} {{formateur.Etatcivil}}
+                      {% elif formateur.Etatcivil  == 'MARIE'%} {{formateur.Etatcivil}}
+                      {% elif formateur.Etatcivil  == 'VEUF'%} {{formateur.Etatcivil}}
+                      {% elif formateur.Etatcivil  == 'VEUF'%} {{formateur.Etatcivil}}
+                      {% elif formateur.Etatcivil  == 'DIVORCE'%} {{formateur.Etatcivil}}
+                      {% endif %}
+                    </option>
                     <option value="CELIBATAIRE">CELIBATAIRE</option> 
                     <option value="MARIE">MARIE</option> 
                     <option value="VEUF">VEUF</option> 
                     <option value="DIVORCE">DIVORCE</option> 
                     </select>
                   </div>
-
-                  <div class="form-group">
-                 <label>Niveau d'étude</label>
-                    <select class="js-example-basic-single" style="width:100%" name="niveauEtud">
-                    <option value="">--------------</option>
-                    <option value="LICENCIE">LICENCIE</option> 
-                    <option value="GRADUE">GRADUE</option> 
-                    <option value="DIPLOME">DIPLOME</option> 
-                    <option value="AUTRES">AUTRES</option> 
-                    </select>
-                  </div>
-              
                    <div class="form-group">
                     <label for="exampleInputCity1">E-mail</label>
-                    <input type="mail" style="color:white" class="form-control" id="exampleInputCity1" placeholder="email" name="email">
+                    <input type="mail" value = "{{formateur.email }}"  style="color:white" class="form-control" id="exampleInputCity1" placeholder="email" name="email">
                   </div>
 
                    <div class="form-group">
                     <label for="exampleInputCity1">Téléphone</label>
-                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="téléphone" name="telephone">
+                    <input type="text" style="color:white" value = "{{formateur.telephone }}"  class="form-control" id="exampleInputCity1" placeholder="téléphone" name="telephone">
+                  </div>
+
+                   <div class="form-group">
+                    <label for="exampleInputCity1">Niveau d'études</label>
+                    <input type="text" style="color:white" value = "{{formateur.niveauEtude }}"  class="form-control" id="exampleInputCity1" placeholder="téléphone" name="niveau">
                   </div>
      
                {% if msg %}
@@ -99,11 +116,11 @@
 
         <div class="form-group">
             <label for="exampleTextarea1">Adresse</label>
-            <textarea class="form-control" style="color:white" id="exampleTextarea1" name="adresse" rows="4"></textarea>
+            <textarea class="form-control" style="color:white" id="exampleTextarea1" name="adresse" rows="4">{{formateur.adresse}}</textarea>
         </div>
 
 
-          <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
+          <button type="submit" class="btn btn-primary mr-2">{% if formateur %} Modifier {% else %}Enregistrer{% endif %}</button>
           <a class="btn btn-primary mr-2" href="{% url 'formateur' %}" style="color:white">Retour<a/>
         </form>
         

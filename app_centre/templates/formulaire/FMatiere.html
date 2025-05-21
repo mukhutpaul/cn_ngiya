@@ -6,9 +6,9 @@
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Formulaire d'ajout de matière</h4>
+        <h4 class="card-title">{% if matiere %}Modification {% else %}Formulaire d'ajout de matière{% endif %}</h4>
         <p class="card-description"> Information </p>
-        <form class="forms-sample" method="post" action="{% url 'addMatiere' %}">
+        <form class="forms-sample" method="post" action="{% if matiere %} {% url 'updateMatiere' matiere.id %}{% else %} {% url 'addMatiere' %} {% endif %}">
             {% csrf_token %}
         <div class="row">
             <div class="col-6">
@@ -16,14 +16,14 @@
                     
                    <div class="form-group">
                     <label for="exampleInputCity1">Designation</label>
-                    <input type="text" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Matière" name="matiere">
+                    <input type="text" style="color:white" value="{{ matiere.designation }}" class="form-control" id="exampleInputCity1" placeholder="Matière" name="matiere">
                   </div>
             </div>
 
             <div class="col-6">
               <div class="form-group">
                     <label for="exampleInputCity1">Volume Horaire</label>
-                    <input type="number" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Volume horaire" name="heure">
+                    <input type="number" value="{{ matiere.nombreHeure }}" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Volume horaire" name="heure">
                 </div>
                 {% if msg %}
                     <script>
@@ -48,13 +48,13 @@
                 }); 
                 </script>
                <div class="form-group">
-                <label class="badge badge-danger">{{msg}}</label>
+                <label class="badge badge-danger">{{msok}}</label>
                </div>
                {% endif %}
             </div>
         </div>
 
-          <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
+          <button type="submit" class="btn btn-primary mr-2">{% if matiere %}Modifier {% else %}Enregistrer{% endif %}</button>
             <a style ="color:white" class="btn btn-primary mr-2" href="{% url 'matiere' %}">Retour</a>
         </form>
       </div>

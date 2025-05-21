@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app_centre.views import addAprenant, addDetailAprenant, addDetailFormateur, addDetailFormation, addDetailPresence, addFormateur, addFormation, addFrais, addLocal, addMatiere, addUser, addpaiement, addpresence, aprenant, deleteAprenant, deleteFormateur, deleteLocal, deleteMatiere, deletePaie, deletePresence, deleteUser, deletedetailAprenant, deletedetailFormateur, deletedetailFormation, deletedetailPresence, detaiPresence, detailAprenant, detailFormateur, detailFormation, fAprenant, fFormateur, fFormation, fFrais, fUser, flocal, fmatiere, formateur, formation, fpaiement, fpresence, frais, home, local, log_out, login, matiere, modifierAprenant, paiement, presence, print_recu, sign_in, statistiquePresence, updateAprenant, users
+from app_centre.views import addAprenant, addDetailAprenant, addDetailFormateur, addDetailFormation, addDetailPresence, addFormateur, addFormation, addFrais, addLocal, addMatiere, addUser, addpaiement, addpresence, aprenant, deleteAprenant, deleteFormateur, deleteLocal, deleteMatiere, deletePaie, deletePresence, deleteUser, deletedetailAprenant, deletedetailFormateur, deletedetailFormation, deletedetailPresence, detaiPresence, detailAprenant, detailFormateur, detailFormation, fAprenant, fFormateur, fFormation, fFrais, fUser, flocal, fmatiere, formateur, formation, fpaiement, fpresence, frais, home, local, log_out, login, matiere, modifierAprenant, modifierFormateur, modifierMatiere, paiement, presence, print_recu, sign_in, statistiquePresence, updateAprenant, updateFormateur, updateMatiere, users
 
 
 urlpatterns = [
@@ -128,6 +128,14 @@ urlpatterns = [
    ##MODIFICATIONS
    path('modifierAprenant<int:id>/',modifierAprenant, name="modifierAprenant"),
    path('updateAprenant<int:id>/',updateAprenant, name="updateAprenant"),
+   
+   path('modifierFormateur<int:id>/',modifierFormateur, name="modifierAprenant"),
+   path('updateFormateur<int:id>/',updateFormateur, name="updateFormateur"),
+   
+   path('modifierMatiere<int:id>/',modifierMatiere, name="modifierMatiere"),
+   path('updateMatiere<int:id>/',updateMatiere, name="updateMatiere"),
+   
+   
    
    
    
