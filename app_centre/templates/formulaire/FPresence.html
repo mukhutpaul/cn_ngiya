@@ -6,17 +6,25 @@
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Formulaire d'ajout de présence</h4>
+        <h4 class="card-title">{% if presence %}Modification{% else %}Formulaire d'ajout de présence{% endif %}</h4>
         <p class="card-description"> Information </p>
-        <form class="forms-sample" method="post" action="{% url 'addpresence' %}">
+        <form class="forms-sample" method="post" action="{% if presence %}{% url 'updatePresence' presence.id %}{% else %} {% url 'addpresence' %} {% endif %}">
             {% csrf_token %}
         <div class="row">
             <div class="col-6">
                     <div class="form-group">
                         <label>Formation</label>
                         <select class="js-example-basic-single" style="width:100%" name="formation">
-                          <option value="">--------------</option>
+                          {% if presence %}
+                          
+                          {% else %}
+                            <option value="">--------------</option>
+                          {% endif %}
+                          
                           {% for f in formation %}
+                          <option value="{{ presence.formation.id }}">
+                            {{presence.formation}}
+                          </option>
                           <option value="{{f.id}}">{{f.designaion}}</option>
                           {% endfor %}
                         </select>
@@ -24,7 +32,7 @@
                     
                    <div class="form-group">
                     <label for="exampleInputCity1">Date</label>
-                    <input type="date" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Location" name="dateP">
+                    <input type="date" value="{{presence.datePr}}" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Location" name="dateP">
                   </div>
             </div>
 
@@ -32,7 +40,16 @@
                 <div class="form-group">
                     <label>Matière</label>
                     <select class="js-example-basic-single" style="width:100%" name="matiere">
-                      <option value="">--------------</option>
+                        {% if presence %}
+                          
+                          {% else %}
+                            <option value="">--------------</option>
+                          {% endif %}
+                          
+                          <option value="{{ presence.matiere.id }}">
+                            {{presence.matiere}}
+                          </option>
+
                       {% for m in matiere %}
                           <option value="{{m.id}}">{{m.designation}}</option>
                       {% endfor %}
@@ -42,7 +59,15 @@
                  <div class="form-group">
                     <label>Session</label>
                     <select class="js-example-basic-single" style="width:100%" name="session">
-                      <option value="">--------------</option>
+                        {% if presence %}
+                          
+                          {% else %}
+                            <option value="">--------------</option>
+                          {% endif %}
+                          
+                          <option value="{{ presence.sesion.id }}">
+                            {{presence.sesion}}
+                          </option>
                       {% for s in session %}
                           <option value="{{s.id}}">{{s.designation}}-{{s.dateDebut}}-{{s.dateFin}}</option>
                       {% endfor %}
@@ -75,7 +100,7 @@
             </div>
         </div>
 
-          <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
+          <button type="submit" class="btn btn-primary mr-2">{% if presence %}Modifier {% else %}Enregistrer {% endif %}</button>
            <a style ="color:white" class="btn btn-primary mr-2" href="{% url 'presence' %}">Retour</a>
         </form>
       

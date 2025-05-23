@@ -317,6 +317,7 @@ def print_recu(request,id):
 
 
 # USER AUTHENTIFICATION
+
 def login(request):
     
     return render(request,'user/login.html')
@@ -363,7 +364,7 @@ def fpaiement(request):
     return render(request,'formulaire/FPaiement.html',ctx)
 
 #addPaie
-
+@login_required(login_url="sign_in")
 def addpaiement(request):
     frs = Frais.objects.all()
     apr = Aprenant.objects.all()
@@ -423,6 +424,7 @@ def fmatiere(request):
     return render(request,'formulaire/FMatiere.html')
 
 ##ADD MATIERES
+@login_required(login_url="sign_in")
 def addMatiere(request):
     if request.method == 'POST':
         msg = None
@@ -458,6 +460,7 @@ def fAprenant(request):
     return render(request,'formulaire/FAprenant.html')
 
 ##ADD APPRENANT
+@login_required(login_url="sign_in")
 def addAprenant(request):
    
     if request.method == 'POST':
@@ -556,7 +559,7 @@ def presence(request):
     return render(request,'page/presence.html',ctx)
 
 #Details présence
-
+@login_required(login_url="sign_in")
 def detaiPresence(request,id):
     sel_presence = Presence.objects.get(id = id)
     liste_aprenant = Aprenant.objects.all()
@@ -614,6 +617,7 @@ def detaiPresence(request,id):
     }
     return render(request,'page/detailPresence.html',ctx)
 
+@login_required(login_url="sign_in")
 def addDetailPresence(request):
     if request.method == 'POST':
         msg = None
@@ -643,6 +647,7 @@ def addDetailPresence(request):
     return HttpResponseRedirect('/detaiPresence'+presence)
 
 #ADD DETAIL FORMATION
+@login_required(login_url="sign_in")
 def addDetailFormation(request):
     if request.method == 'POST':
         msg = None
@@ -670,6 +675,7 @@ def addDetailFormation(request):
     return HttpResponseRedirect('/detailFormation'+formation)
 
 #Detail Aprenant
+@login_required(login_url="sign_in")
 def detailAprenant(request,id):
     sel_aprenant = Aprenant.objects.get(id = id)
     #liste_formationD = AffectationFormation.objects.all()
@@ -704,6 +710,7 @@ def detailAprenant(request,id):
     return render(request,'page/detailAprenant.html',ctx)
 
 ##ADD DETALS APRENANT
+@login_required(login_url="sign_in")
 def addDetailAprenant(request):
     if request.method == 'POST':
         msg = None
@@ -733,7 +740,7 @@ def addDetailAprenant(request):
 
 
 ##DETAIL FORMATIONS
-
+@login_required(login_url="sign_in")
 def detailFormation(request,id):
     sel_formation = Formation.objects.get(id = id)
     #liste_formationD = AffectationFormation.objects.all()
@@ -769,7 +776,7 @@ def detailFormation(request,id):
 
 
 ## ADD DETAIL FORMATEURS
-
+@login_required(login_url="sign_in")
 def addFormation(request):
     if request.method == 'POST':
         msg = None
@@ -801,6 +808,7 @@ def addFormation(request):
 
 
 #Formulaires Présence
+
 @login_required(login_url="sign_in")
 def fpresence(request):
     matiere = Matiere.objects.all()
@@ -816,7 +824,7 @@ def fpresence(request):
     return render(request,'formulaire/FPresence.html',ctx)
 
 #addPrésence
-
+@login_required(login_url="sign_in")
 def addpresence(request):
    
     if request.method == 'POST':
@@ -877,6 +885,7 @@ def flocal(request):
     return render(request,'formulaire/FLocal.html')
 
 ##ADD MATIERES
+@login_required(login_url="sign_in")
 def addLocal(request):
    
     if request.method == 'POST':
@@ -911,6 +920,7 @@ def fFormation(request):
     return render(request,'formulaire/FFormation.html')
 
 ##ADD Formation
+@login_required(login_url="sign_in")
 def addFormation(request):
     if request.method == 'POST':
         msg = None
@@ -945,6 +955,7 @@ def fFrais(request):
     return render(request,'formulaire/FFrais.html')
 
 ##ADD FRAIS
+@login_required(login_url="sign_in")
 def addFrais(request):
     if request.method == 'POST':
         msg = None
@@ -981,6 +992,7 @@ def fFormateur(request):
     return render(request,'formulaire/FFormateur.html')
 
 ##ADD APPRENANT
+@login_required(login_url="sign_in")
 def addFormateur(request):
    
     if request.method == 'POST':
@@ -1037,6 +1049,7 @@ def addFormateur(request):
     return render(request,'formulaire/FFormateur.html',ctx)
 
 ##DETAILS FORMATEURS
+@login_required(login_url="sign_in")
 def detailFormateur(request,id):
     sel_formateur = Formateur.objects.get(id = id)
     #liste_formationD = AffectationFormation.objects.all()
@@ -1068,6 +1081,7 @@ def detailFormateur(request,id):
     return render(request,'page/detailFormateur.html',ctx)
 
 ##ADD DETALS FORMATEUR
+@login_required(login_url="sign_in")
 def addDetailFormateur(request):
     if request.method == 'POST':
         msg = None
@@ -1129,6 +1143,7 @@ def fUser(request):
     return render(request,'formulaire/FUser.html',ctx)
 
 ##ADD USERS
+@login_required(login_url="sign_in")
 def addUser(request):
     if request.method == 'POST':
         profiles = Profile.objects.all()
@@ -1183,7 +1198,7 @@ def addUser(request):
 
 
 ##STATISTIQUES PRESENCES
-
+@login_required(login_url="sign_in")
 def statistiquePresence(request,id):
     compte = 0
     data = [] 
@@ -1219,18 +1234,21 @@ def statistiquePresence(request,id):
 
 ######SUPPRESSION
 #Delete paie
+@login_required(login_url="sign_in")
 def deletePaie(request,id):
     p = Paiement.objects.get(pk=id)
     p.delete()
     return HttpResponseRedirect('/paie/')
 
 #Delete paie
+@login_required(login_url="sign_in")
 def deleteUser(request,id):
     user = User.objects.get(pk=id)
     user.delete()
     return HttpResponseRedirect('/users/')
 
 #Delete APRENANT
+@login_required(login_url="sign_in")
 def deleteAprenant(request,id):
     p = Aprenant.objects.get(pk=id)
     verifie = AffectationFormation.objects.filter(aprenant=p)
@@ -1245,6 +1263,7 @@ def deleteAprenant(request,id):
     return HttpResponseRedirect('/aprenant/')
 
 #Delete Matière
+@login_required(login_url="sign_in")
 def deleteMatiere(request,id):
     m = Matiere.objects.get(pk=id)
     verifie = AffecteMatiereFormateur.objects.filter(matiere=m)
@@ -1260,6 +1279,7 @@ def deleteMatiere(request,id):
     return HttpResponseRedirect('/matiere/')
 
 #Delete Formateur
+@login_required(login_url="sign_in")
 def deleteFormateur(request,id):
     f = Formateur.objects.get(pk=id)
     verifie = AffecteMatiereFormateur.objects.filter(formateur=f)
@@ -1276,6 +1296,7 @@ def deleteFormateur(request,id):
     return HttpResponseRedirect('/formateur/')
 
 #Delete Formateur
+@login_required(login_url="sign_in")
 def deletePresence(request,id):
     p = Presence.objects.get(pk=id)
     verifie = DetailPresence.objects.filter(Presence=p)
@@ -1291,6 +1312,7 @@ def deletePresence(request,id):
     return HttpResponseRedirect('/presence/')
 
 #Delete Local
+@login_required(login_url="sign_in")
 def deleteLocal(request,id):
     l = Local.objects.get(pk=id)
     verifie = SessionFormation.objects.filter(local=l)
@@ -1306,6 +1328,7 @@ def deleteLocal(request,id):
     return HttpResponseRedirect('/local/')
 
 #Delete Formateur
+@login_required(login_url="sign_in")
 def deleteFormation(request,id):
     f = Formateur.objects.get(pk=id)
     verifie = AffecteMatiereFormateur.objects.filter(formation=f)
@@ -1323,6 +1346,7 @@ def deleteFormation(request,id):
     return HttpResponseRedirect('/formation/')
 
 #Delete Formateur
+@login_required(login_url="sign_in")
 def deleteFrais(request,id):
     f = Frais.objects.get(pk=id)
     verifie = Paiement.objects.filter(frais=f)
@@ -1337,6 +1361,7 @@ def deleteFrais(request,id):
         return HttpResponseRedirect('/frais/')
     return HttpResponseRedirect('/frais/')
 
+@login_required(login_url="sign_in")
 def deletedetailFormation(request,id):
     df = DetailFormation.objects.get(pk=id)
     dt = Formation.objects.get(pk=df.formation.id)
@@ -1344,6 +1369,7 @@ def deletedetailFormation(request,id):
     id_formation = dt.id
     return redirect('/detailFormation'+str(id_formation))
 
+@login_required(login_url="sign_in")
 def deletedetailPresence(request,id):
     dp = DetailPresence.objects.get(pk=id)
     p = Presence.objects.get(pk=dp.Presence.id)
@@ -1351,6 +1377,7 @@ def deletedetailPresence(request,id):
     id_presence = p.id
     return redirect('/detaiPresence'+str(id_presence))
 
+@login_required(login_url="sign_in")
 def deletedetailFormateur(request,id):
     df = AffecteMatiereFormateur.objects.get(pk=id)
     f = Formateur.objects.get(pk=df.formateur.id)
@@ -1358,6 +1385,7 @@ def deletedetailFormateur(request,id):
     id_formateur = f.id
     return redirect('/detailFormateur'+str(id_formateur))
 
+@login_required(login_url="sign_in")
 def deletedetailAprenant(request,id):
     df = AffectationFormation.objects.get(pk=id)
     apr = Aprenant.objects.get(pk=df.aprenant.id)
@@ -1367,6 +1395,7 @@ def deletedetailAprenant(request,id):
 
 ###MODIFICATIONS 
 ##aprenant
+@login_required(login_url="sign_in")
 def modifierAprenant(request,id):
     aprenant= Aprenant.objects.get(pk=id)
     
@@ -1379,6 +1408,7 @@ def modifierAprenant(request,id):
 
 
 ##UPDATE APPRENANT
+@login_required(login_url="sign_in")
 def updateAprenant(request,id):
     aprenant= Aprenant.objects.get(id=id)
     if request.method == 'POST':
@@ -1446,6 +1476,7 @@ def updateAprenant(request,id):
 
 
 ##Matière
+@login_required(login_url="sign_in")
 def modifierMatiere(request,id):
     matiere= Matiere.objects.get(pk=id)
     
@@ -1456,6 +1487,7 @@ def modifierMatiere(request,id):
 
 
 ##UPDATE APPRENANT
+@login_required(login_url="sign_in")
 def updateMatiere(request,id):
     matiere= Matiere.objects.get(id=id)
     if request.method == 'POST':
@@ -1483,6 +1515,7 @@ def updateMatiere(request,id):
     return render(request,'formulaire/FMatiere.html',ctx)
 
 ##Matière
+@login_required(login_url="sign_in")
 def modifierFormateur(request,id):
     formateur= Formateur.objects.get(pk=id)
     
@@ -1493,6 +1526,7 @@ def modifierFormateur(request,id):
 
 
 ##UPDATE FORMATEUR
+@login_required(login_url="sign_in")
 def updateFormateur(request,id):
     formateur= Formateur.objects.get(id=id)
     msg = None
@@ -1551,6 +1585,7 @@ def updateFormateur(request,id):
     return render(request,'formulaire/FFormateur.html',ctx)
 
 ##FRAIS
+@login_required(login_url="sign_in")
 def modifierFrais(request,id):
     frais= Frais.objects.get(pk=id)
     
@@ -1561,6 +1596,7 @@ def modifierFrais(request,id):
 
 
 ##UPDATE FRAIS
+@login_required(login_url="sign_in")
 def updateFrais(request,id):
     frais = Frais.objects.get(id=id)
     msg = None
@@ -1588,6 +1624,244 @@ def updateFrais(request,id):
         'msok': msok 
     }
     return render(request,'formulaire/FFrais.html',ctx)
+
+##FORMATIONS
+@login_required(login_url="sign_in")
+def modifierFormation(request,id):
+    formation= Formation.objects.get(pk=id)
+    
+    ctx ={
+        'formation': formation
+    }
+    return render(request,'formulaire/FFormation.html',ctx)
+
+
+##UPDATE FORMATION
+@login_required(login_url="sign_in")
+def updateFormation(request,id):
+    formation = Formation.objects.get(id=id)
+    msg = None
+    msok = None
+    if request.method == 'POST':
+        
+        designat = request.POST.get("designation",None)
+        duree = request.POST.get("duree",None)
+        
+        if designat == '':
+            msg ="Veuillez remplir la désignation"
+        elif duree == '':
+            msg ="Veuillez remplir la durée de la formation"
+        else:
+            formation.designaion = designat.upper()
+            formation.duree = duree.upper()
+            formation.save()
+            msok ="Traitement ok"
+            #return HttpResponseRedirect('/matiere/')
+    ctx ={
+        'msg':msg,
+        'msok': msok 
+    }
+    return render(request,'formulaire/FFormation.html',ctx)
+
+##LOCAL
+@login_required(login_url="sign_in")
+def modifierLocal(request,id):
+    local = Local.objects.get(pk=id)
+    
+    ctx ={
+        'local': local
+    }
+    return render(request,'formulaire/FLocal.html',ctx)
+
+
+##UPDATE LOCAL
+@login_required(login_url="sign_in")
+def updateLocal(request,id):
+    local = Local.objects.get(id=id)
+    if request.method == 'POST':
+        msg = None
+        msok = None
+        designat = request.POST.get("designation",None)
+        cap = request.POST.get("cap",None)
+        
+        if designat == '':
+            msg ="Veuillez remplir la désignation"
+        elif cap == '':
+            msg ="Veuillez remplir la capacité d'accueil"
+        else:
+            
+            local.designation = designat.upper()
+            local.capacite = cap
+            local.save()
+            msok ="Traitement ok"
+            #return HttpResponseRedirect('/matiere/')
+    ctx ={
+        'msg':msg,
+        'msok': msok 
+    }
+    return render(request,'formulaire/FLocal.html',ctx)
+
+##PRESENCE
+@login_required(login_url="sign_in")
+def modifierPresence(request,id):
+    presence = Presence.objects.get(pk=id)
+    matiere = Matiere.objects.all()
+    session = SessionFormation.objects.all()
+    formation = Formation.objects.all()
+    
+    ctx ={
+        'presence': presence,
+        'matiere': matiere,
+        'session': session,
+        'formation': formation
+    }
+    return render(request,'formulaire/FPresence.html',ctx)
+
+
+##UPDATE PRESENCE
+@login_required(login_url="sign_in")
+def updatePresence(request,id):
+    presence = Presence.objects.get(pk=id)
+    if request.method == 'POST':
+        msg = None
+        msok = None
+        dateP = request.POST.get("dateP",None)
+        session = request.POST.get("session",None)
+        formation = request.POST.get("formation",None)
+        matiere = request.POST.get("matiere",None)
+        
+        if dateP == '':
+            msg ="Veuillez remplir la date"
+            matiere = Matiere.objects.all()
+            session = SessionFormation.objects.all()
+            formation = Formation.objects.all()
+        elif  session=='':
+            matiere = Matiere.objects.all()
+            session = SessionFormation.objects.all()
+            formation = Formation.objects.all()
+            msg ="Veuillez remplir la session"
+        
+        elif  formation == '':
+            matiere = Matiere.objects.all()
+            session = SessionFormation.objects.all()
+            formation = Formation.objects.all()
+            msg ="Veuillez remplir la formation"
+        elif  matiere == '':
+            matiere = Matiere.objects.all()
+            session = SessionFormation.objects.all()
+            formation = Formation.objects.all()
+            msg ="Veuillez remplir la matiere"
+        else:
+            mat = Matiere.objects.get(pk=matiere)
+            ses = SessionFormation.objects.get(pk=session)
+            form = Formation.objects.get(pk=formation)
+            
+            presence.formation = form
+            presence.matiere = mat
+            presence.sesion = ses
+            presence.datePr = dateP
+            
+            presence.save()
+            msok = "Traitement ok!"
+    ctx ={
+        'msg':msg,
+        'msok':msok,
+        'matiere': matiere,
+        'formation': formation,
+        'session': session
+    }
+    return render(request,'formulaire/FPresence.html',ctx)
+   
+
+
+##PAIEMENT
+@login_required(login_url="sign_in")
+def modifierPaiement(request,id):
+    paiement = Paiement.objects.get(pk=id)
+    frs = Frais.objects.all()
+    apr = Aprenant.objects.all()
+    
+    
+    ctx ={
+        'frs': frs,
+        'apr': apr,
+        'paiement': paiement
+    }
+    return render(request,'formulaire/FPaiement.html',ctx)
+
+
+##UPDATE PAIEMENT
+@login_required(login_url="sign_in")
+def updatePaiement(request,id):
+    paiement = Paiement.objects.get(pk=id)  
+    frs = Frais.objects.all()
+    apr = Aprenant.objects.all()
+    msg = None
+    msk = None
+    if request.method == 'POST':
+        frais_id = request.POST.get("fraisid",None)
+        aprenant_id = request.POST.get("aprenantid",None)
+        montant = request.POST.get("montant",0)
+        somme=0
+        sm =0
+        
+        if frais_id == '':
+            msg ="Veuillez remplir le frais"
+        elif  montant=='':
+            msg ="Veuillez remplir le montant"
+        
+        elif  aprenant_id == '':
+            paies = Paiement.objects.filter(aprenant=aprenant_id,frais=frais_id)
+            frss = Frais.objects.get(pk=frais_id)
+            for p in paies:
+                somme += p.montant
+            sm = int(montant) + somme
+            msg ="Veuillez choisir l aprenant"
+            if somme >= frss.cout:
+                msg = "Cet aprenant a déjà soldé ce frais"
+                        
+            elif sm > frss.cout:
+                msg = "Le montant inscrit est supérieur au solde restant pour ce frais"
+            elif int(montant)>frss.cout:
+                msg = "Le montant inscrit est supérieur au coût de ce frais"
+                         
+            else:
+                        #frs = Frais.objects.get(pk=frais_id)
+                apr = Aprenant.objects.get(pk=aprenant_id)
+               
+                paiement.aprenant = apr
+                paiement.frais = frss
+                paiement.montant = montant
+                paiement.save()
+                msk = "Traitement ok"
+                #return HttpResponseRedirect('/paie/')
+        
+            
+    return render(request,'formulaire/FPaiement.html',{'msg':msg,'paiement':paiement,'frs': frs,'apr': apr,'msk':msk})
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

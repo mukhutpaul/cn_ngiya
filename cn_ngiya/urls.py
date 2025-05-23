@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app_centre.views import addAprenant, addDetailAprenant, addDetailFormateur, addDetailFormation, addDetailPresence, addFormateur, addFormation, addFrais, addLocal, addMatiere, addUser, addpaiement, addpresence, aprenant, deleteAprenant, deleteFormateur, deleteLocal, deleteMatiere, deletePaie, deletePresence, deleteUser, deletedetailAprenant, deletedetailFormateur, deletedetailFormation, deletedetailPresence, detaiPresence, detailAprenant, detailFormateur, detailFormation, fAprenant, fFormateur, fFormation, fFrais, fUser, flocal, fmatiere, formateur, formation, fpaiement, fpresence, frais, home, local, log_out, login, matiere, modifierAprenant, modifierFormateur, modifierFrais, modifierMatiere, paiement, presence, print_recu, sign_in, statistiquePresence, updateAprenant, updateFormateur, updateFrais, updateMatiere, users
+from app_centre.views import addAprenant, addDetailAprenant, addDetailFormateur, addDetailFormation, addDetailPresence, addFormateur, addFormation, addFrais, addLocal, addMatiere, addUser, addpaiement, addpresence, aprenant, deleteAprenant, deleteFormateur, deleteLocal, deleteMatiere, deletePaie, deletePresence, deleteUser, deletedetailAprenant, deletedetailFormateur, deletedetailFormation, deletedetailPresence, detaiPresence, detailAprenant, detailFormateur, detailFormation, fAprenant, fFormateur, fFormation, fFrais, fUser, flocal, fmatiere, formateur, formation, fpaiement, fpresence, frais, home, local, log_out, login, matiere, modifierAprenant, modifierFormateur, modifierFormation, modifierFrais, modifierLocal, modifierMatiere, modifierPaiement, modifierPresence, paiement, presence, print_recu, sign_in, statistiquePresence, updateAprenant, updateFormateur, updateFormation, updateFrais, updateLocal, updateMatiere, updatePaiement, updatePresence, users
 
 
 urlpatterns = [
@@ -134,8 +134,20 @@ urlpatterns = [
    
    path('modifierFrais<int:id>/',modifierFrais, name="modifierFrais"),
    path('updateFrais<int:id>/',updateFrais, name="updateFrais"),
-  
    
+   path('modifierFormation<int:id>/',modifierFormation, name="modifierFormation"),
+   path('updateFormation<int:id>/',updateFormation,name="updateFormation"),
+   
+   path('modifierLocal<int:id>/',modifierLocal, name="modifierLocal"),
+   path('updateLocal<int:id>/',updateLocal,name="updateLocal"),
+   
+   path('modifierPresence<int:id>/',modifierPresence, name="modifierPresence"),
+   path('updatePresence<int:id>/',updatePresence,name="updatePresence"),
+   
+   path('modifierPaiement<int:id>/',modifierPaiement, name="modifierPaiement"),
+   path('updatePaiement<int:id>/',updatePaiement,name="updatePaiement"),
+   
+  
    path('modifierMatiere<int:id>/',modifierMatiere, name="modifierMatiere"),
    path('updateMatiere<int:id>/',updateMatiere, name="updateMatiere"),
    

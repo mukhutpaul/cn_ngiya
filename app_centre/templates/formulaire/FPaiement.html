@@ -6,16 +6,20 @@
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Gestion des paiements des frais</h4>
+        <h4 class="card-title">{% if paiement %}Modification{% else %}Ajout d'un paiement{% endif %}</h4>
         <p class="card-description"> Information </p>
-        <form class="forms-sample" method="post" action="{% url 'addpaiement' %}">
+        <form class="forms-sample" method="post" action="{% if paiemet %} {% url 'updatePaiement' paiement.id %} {% else %}{% url 'addpaiement' %} {% endif %}">
             {% csrf_token %}
         <div class="row">
             <div class="col-6">
                     <div class="form-group">
                         <label>Aprenant</label>
                         <select class="js-example-basic-single" style="width:100%" name="aprenantid">
+                          {% if paiement %}
+                          {% else %}
                           <option value="">--------------</option>
+                          {% endif %}
+                          <option value="{{paiement.aprenant.id}}">{{paiement.aprenant}}</option>
                           {% for a in apr %}
                           <option value="{{a.id}}">{{a.nom}} {{a.postnom}} {{a.prenom}}</option>
                           {% endfor %}
@@ -24,7 +28,7 @@
                     
                    <div class="form-group">
                     <label for="exampleInputCity1">Montant</label>
-                    <input type="number" class="form-control" id="exampleInputCity1" placeholder="Location" name="montant">
+                    <input type="number" value="{{paiement.montant }}" class="form-control" id="exampleInputCity1" placeholder="Location" name="montant">
                   </div>
             </div>
 
@@ -32,7 +36,11 @@
                 <div class="form-group">
                     <label>Motif de paiement</label>
                     <select class="js-example-basic-single" style="width:100%" name="fraisid">
-                      <option value="">--------------</option>
+                      {% if paiement %}
+                      {% else %}
+                          <option value="">--------------</option>
+                      {% endif %}
+                          <option value="{{paiement.frais.id}}">{{paiement.frais}}</option>
                       {% for f in frs %}
                           <option value="{{f.id}}">{{f.designation}}</option>
                       {% endfor %}
@@ -65,8 +73,8 @@
             </div>
         </div>
 
-          <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
-          <button class="btn btn-primary mr-2"><a style ="color:white" href="{% url 'paie' %}">Retour</a></button>
+          <button type="submit" class="btn btn-primary mr-2">{% if paiement %}Modifier {% else %}Enregistrer {% endif %}</button>
+          <a style ="color:white" class="btn btn-primary mr-2" href="{% url 'paie' %}">Retour</a>
         </form>
       </div>
     </div>

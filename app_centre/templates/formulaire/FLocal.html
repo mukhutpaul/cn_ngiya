@@ -8,9 +8,9 @@
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Formulaire d'ajout de local</h4>
+        <h4 class="card-title">{% if local %}Modification {% else %}Formulaire d'ajout de local{% endif%}</h4>
         <p class="card-description"> Information </p>
-        <form class="forms-sample" method="post" action="{% url 'addFormation' %}" 
+        <form class="forms-sample" method="post" action="{% if local %}{% url 'updateLocal' local.id %} {% else %} {% url 'addFormation' %} {% endif %}" 
         name="formValidation" id="formValidation">
             {% csrf_token %}
         <div class="row">
@@ -19,14 +19,14 @@
                     
                    <div class="form-group">
                     <label for="exampleInputCity1">Designation</label>
-                    <input type="text" style="color:white" class="form-control" id="designation" placeholder="Désignation" name="designation">
+                    <input type="text" value="{{local.designation}}" style="color:white" class="form-control" id="designation" placeholder="Désignation" name="designation">
                   </div>
             </div>
 
             <div class="col-6">
               <div class="form-group">
                     <label for="exampleInputCity1">Capacité d'accueil</label>
-                    <input type="number" style="color:white" class="form-control" id="exampleInputCity1" placeholder="capacité" name="cap">
+                    <input type="number" value="{{local.capacite}}" style="color:white" class="form-control" id="exampleInputCity1" placeholder="capacité" name="cap">
                 </div>
               {% if msg %}
                     <script>
@@ -55,7 +55,7 @@
             </div>
         </div>
 
-          <button type="submit" value="Submit" class="btn btn-primary mr-2">Enregistrer</button>
+          <button type="submit" value="Submit" class="btn btn-primary mr-2">{% if local %}Modifier{% else %}Enregistrer {% endif %}</button>
           <a style ="color:white" class="btn btn-primary mr-2" href="{% url 'local' %}">Retour</a>
         </form>
       </div>
