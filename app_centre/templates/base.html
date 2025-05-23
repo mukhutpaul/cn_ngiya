@@ -112,20 +112,41 @@
               </ul>
             </div>
           </li> {% endcomment %}
-          <li class="nav-item menu-items {{lapr}}">
-            <a class="nav-link" href="{% url 'aprenant' %}">
-              <span class="menu-icon">
-                <i class="mdi mdi-playlist-play"></i>
-              </span>
-              <span class="menu-title">Aprenant</span>
-            </a>
-          </li>
+          
           <li class="nav-item menu-items {{lmtr}}">
             <a class="nav-link" href="{% url 'matiere' %}">
               <span class="menu-icon">
                 <i class="mdi mdi-table-large"></i>
               </span>
               <span class="menu-title">Matières</span>
+            </a>
+          </li>
+
+          
+          <li class="nav-item menu-items {{lloc}}">
+            <a class="nav-link" href="{% url 'local' %}">
+              <span class="menu-icon">
+                <i class="mdi mdi-table-large"></i>
+              </span>
+              <span class="menu-title">Locaux</span>
+            </a>
+          </li>
+
+          <li class="nav-item menu-items {{lfmt}}">
+            <a class="nav-link" href="{% url 'formation' %}">
+              <span class="menu-icon">
+                <i class="mdi mdi-table-large"></i>
+              </span>
+              <span class="menu-title">Formations</span>
+            </a>
+          </li>
+
+          <li class="nav-item menu-items {{lapr}}">
+            <a class="nav-link" href="{% url 'aprenant' %}">
+              <span class="menu-icon">
+                <i class="mdi mdi-playlist-play"></i>
+              </span>
+              <span class="menu-title">Aprenant</span>
             </a>
           </li>
 
@@ -147,25 +168,6 @@
             </a>
           </li>
 
-          
-
-          <li class="nav-item menu-items {{lloc}}">
-            <a class="nav-link" href="{% url 'local' %}">
-              <span class="menu-icon">
-                <i class="mdi mdi-table-large"></i>
-              </span>
-              <span class="menu-title">Locaux</span>
-            </a>
-          </li>
-
-          <li class="nav-item menu-items {{lfmt}}">
-            <a class="nav-link" href="{% url 'formation' %}">
-              <span class="menu-icon">
-                <i class="mdi mdi-table-large"></i>
-              </span>
-              <span class="menu-title">Formations</span>
-            </a>
-          </li>
 
           <li class="nav-item menu-items {{lfrais}}">
             <a class="nav-link" href="{% url 'frais' %}">
