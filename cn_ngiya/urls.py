@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app_centre.views import addAprenant, addDetailAprenant, addDetailFormateur, addDetailFormation, addDetailPresence, addFormateur, addFormation, addFrais, addLocal, addMatiere, addUser, addpaiement, addpresence, aprenant, deleteAprenant, deleteFormateur, deleteLocal, deleteMatiere, deletePaie, deletePresence, deleteUser, deletedetailAprenant, deletedetailFormateur, deletedetailFormation, deletedetailPresence, detaiPresence, detailAprenant, detailFormateur, detailFormation, fAprenant, fFormateur, fFormation, fFrais, fUser, flocal, fmatiere, formateur, formation, fpaiement, fpresence, frais, home, local, log_out, login, matiere, modifierAprenant, modifierFormateur, modifierFormation, modifierFrais, modifierLocal, modifierMatiere, modifierPaiement, modifierPresence, paiement, presence, print_recu, sign_in, statistiquePresence, updateAprenant, updateFormateur, updateFormation, updateFrais, updateLocal, updateMatiere, updatePaiement, updatePresence, users
+from app_centre.views import addAprenant, addDetailAprenant, addDetailFormateur, addDetailFormation, addDetailPresence, addFormateur, addFormation, addFrais, addLocal, addMatiere, addUser, addpaiement, addpresence, aprenant, deleteAprenant, deleteFormateur, deleteFormation, deleteFrais, deleteLocal, deleteMatiere, deletePaie, deletePresence, deleteUser, deletedetailAprenant, deletedetailFormateur, deletedetailFormation, deletedetailPresence, detaiPresence, detailAprenant, detailFormateur, detailFormation, fAprenant, fFormateur, fFormation, fFrais, fUser, flocal, fmatiere, formateur, formation, fpaiement, fpresence, frais, home, local, log_out, login, matiere, modifierAprenant, modifierFormateur, modifierFormation, modifierFrais, modifierLocal, modifierMatiere, modifierPaiement, modifierPresence, modifierUser, paiement, presence, print_recu, sign_in, statistiquePresence, updateAprenant, updateFormateur, updateFormation, updateFrais, updateLocal, updateMatiere, updatePaiement, updatePresence, updateUser, users
 
 
 urlpatterns = [
@@ -103,6 +103,15 @@ urlpatterns = [
    #Delete paie
    path('deletePaie<int:id>/',deletePaie, name="deletePaie"),
    #Delete Aprenant
+   
+   #Delete Formation
+   path('deleteFormation<int:id>/',deleteFormation, name="deleteFormation"),
+   #Delete Aprenant
+   
+   #Delete Formation
+   path('deleteFrais<int:id>/',deleteFrais, name="deleteFrais"),
+   #Delete Aprenant
+   
    path('deleteAprenant<int:id>/',deleteAprenant, name="deleteAprenant"),
    
    #Delete Matière
@@ -151,6 +160,8 @@ urlpatterns = [
    path('modifierMatiere<int:id>/',modifierMatiere, name="modifierMatiere"),
    path('updateMatiere<int:id>/',updateMatiere, name="updateMatiere"),
    
+   path('updateUser<int:id>/',updateUser, name="updateUser"),
+   path('modifierUser<int:id>/',modifierUser, name="modifierUser"),
    
    
    
@@ -159,42 +170,6 @@ urlpatterns = [
    
    
    
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+
    
 ]

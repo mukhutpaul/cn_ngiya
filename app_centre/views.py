@@ -377,25 +377,29 @@ def addpaiement(request):
         montant = request.POST.get("montant",0)
         somme=0
         sm =0
+        smdj = 0
         
         if frais_id == '':
             msg ="Veuillez remplir le frais"
         elif  montant=='':
             msg ="Veuillez remplir le montant"
-        
-        elif  aprenant_id == '':
+        elif aprenant_id == '':
+            msg ="Veuillez choisir l aprenant"
+        else:
             paies = Paiement.objects.filter(aprenant=aprenant_id,frais=frais_id)
             frss = Frais.objects.get(pk=frais_id)
             for p in paies:
                 somme += p.montant
             sm = int(montant) + somme
             print("MUKHUT %%%%",sm)
-            msg ="Veuillez choisir l aprenant"
+            
             if somme >= frss.cout:
                 msg = "Cet aprenant a déjà soldé ce frais"
-                        
+                       
             elif sm > frss.cout:
-                msg = "Le montant inscrit est supérieur au solde restant pour ce frais"
+                rs = frss.cout - somme
+                message = "Impossible de traiter cette opération car le montant restant ou à payer est de "
+                msg =  f"{message}{rs}{" $"}"
             elif int(montant)>frss.cout:
                 msg = "Le montant inscrit est supérieur au coût de ce frais"
                          
@@ -409,8 +413,10 @@ def addpaiement(request):
                     ) 
                 paie.save()
                 msk = "Traitement ok"
-                print("aaaaaaaaa",msk)
+                #print("aaaaaaaaa",msk)
                 #return HttpResponseRedirect('/paie/')
+                frs = Frais.objects.all()
+                apr = Aprenant.objects.all()
         
             
     return render(request,'formulaire/FPaiement.html',{'msg':msg,'frs': frs,'apr': apr,'msk':msk})
@@ -1330,14 +1336,12 @@ def deleteLocal(request,id):
 #Delete Formateur
 @login_required(login_url="sign_in")
 def deleteFormation(request,id):
-    f = Formateur.objects.get(pk=id)
-    verifie = AffecteMatiereFormateur.objects.filter(formation=f)
+    f = Formation.objects.get(pk=id)
     df = DetailFormation.objects.filter(formation=f)
     pf = Presence.objects.filter(formation=f)
   
     msg = None
-    
-    if len(verifie)>0 or len(df)>0 or len(pf)>0:
+    if  len(df)>0 or len(pf)>0:
         pass
         msg = "Cette formation est déjà liée soit à la préence,ou à l'une d'affectation"
     else:
@@ -1809,35 +1813,109 @@ def updatePaiement(request,id):
             msg ="Veuillez remplir le frais"
         elif  montant=='':
             msg ="Veuillez remplir le montant"
-        
-        elif  aprenant_id == '':
+        elif aprenant_id == '':
+            msg ="Veuillez choisir l aprenant"
+        else:
             paies = Paiement.objects.filter(aprenant=aprenant_id,frais=frais_id)
             frss = Frais.objects.get(pk=frais_id)
             for p in paies:
                 somme += p.montant
             sm = int(montant) + somme
-            msg ="Veuillez choisir l aprenant"
+            print("MUKHUT %%%%",sm)
+            
             if somme >= frss.cout:
                 msg = "Cet aprenant a déjà soldé ce frais"
-                        
+                       
             elif sm > frss.cout:
-                msg = "Le montant inscrit est supérieur au solde restant pour ce frais"
+                rs = frss.cout - somme
+                message = "Impossible de traiter cette opération car le montant restant ou à payer est de "
+                msg =  f"{message}{rs}{" $"}"
             elif int(montant)>frss.cout:
                 msg = "Le montant inscrit est supérieur au coût de ce frais"
-                         
             else:
-                        #frs = Frais.objects.get(pk=frais_id)
+                #frs = Frais.objects.get(pk=frais_id)
                 apr = Aprenant.objects.get(pk=aprenant_id)
-               
                 paiement.aprenant = apr
                 paiement.frais = frss
                 paiement.montant = montant
                 paiement.save()
                 msk = "Traitement ok"
+                frs = Frais.objects.all()
+                apr = Aprenant.objects.all()
                 #return HttpResponseRedirect('/paie/')
         
             
     return render(request,'formulaire/FPaiement.html',{'msg':msg,'paiement':paiement,'frs': frs,'apr': apr,'msk':msk})
+
+##Matière
+@login_required(login_url="sign_in")
+def modifierUser(request,id):
+    user= User.objects.get(pk=id)
+    profile = Profile.objects.all()
+    
+    ctx ={
+        'user': user,
+        'pro': profile
+    }
+    return render(request,'formulaire/FUser.html',ctx)
+
+
+##UPDATE User
+@login_required(login_url="sign_in")
+def updateUser(request,id):
+    user= User.objects.get(pk=id)
+    
+    if request.method == 'POST':
+        profiles = Profile.objects.all()
+        msg = None
+        msok =None
+        profile = request.POST.get("profile",None)
+        noms = request.POST.get("noms",None)
+        username = request.POST.get("username",None)
+        email = request.POST.get("email",None)
+        password = request.POST.get("password",None)
+
+        if email =='':
+            msg = "Veuillez remplir le mail"
+            profiles = Profile.objects.all()
+        elif profile=='':
+            msg="Veuillez choisir le profile"
+            profiles = Profile.objects.all()
+        
+        # elif len(User.objects.filter(username=username))>0:
+        #     msg="Ce nom utilisateur existe déjà"
+        #     profiles = Profile.objects.all()
+            
+        # elif len(User.objects.filter(email=email))>0:
+        #     msg="Cette adresse mail existe déjà"
+        #     profiles = Profile.objects.all() 
+        elif noms=='':
+            msg="Veuillez remplir les noms"
+            profiles = Profile.objects.all()
+        elif username =='':
+            msg="Veuillez remplir le nom utilisateur"
+            profiles = Profile.objects.all()
+        elif password =='':
+            msg="Veuillez remplir le mot de passe"
+            profiles = Profile.objects.all()
+        else:
+            pro = Profile.objects.get(pk=profile)
+            
+            
+            user.noms = noms.upper()
+            user.profile = pro
+            user.username = username.upper()
+            user.email = email
+            user.is_active = True
+            
+            #user.set_password(password)
+            user.save()
+            msok = username+ " a été modifié"
+            
+            #return HttpResponseRedirect('/detailFormateur'+formateur)
+        
+    return render(request,'formulaire/FUser.html',{'msg':msg,'msok':msok,'pro':profiles})
+
 
     
 

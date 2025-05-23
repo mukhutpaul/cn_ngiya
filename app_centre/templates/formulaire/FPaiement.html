@@ -2,13 +2,14 @@
 {% load static %}
 
 {% block content %}
+<meta charset="utf-8">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
         <h4 class="card-title">{% if paiement %}Modification{% else %}Ajout d'un paiement{% endif %}</h4>
         <p class="card-description"> Information </p>
-        <form class="forms-sample" method="post" action="{% if paiemet %} {% url 'updatePaiement' paiement.id %} {% else %}{% url 'addpaiement' %} {% endif %}">
+        <form class="forms-sample" method="post" action="{% if paiement %} {% url 'updatePaiement' paiement.id %} {% else %}{% url 'addpaiement' %} {% endif %}">
             {% csrf_token %}
         <div class="row">
             <div class="col-6">
