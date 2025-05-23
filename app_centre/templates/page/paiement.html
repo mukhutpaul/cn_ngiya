@@ -48,9 +48,9 @@
                </td>
                 <td>
                     <a href="{% url 'deletePaie' p.id %}" onclick="return confirm('Etes-vous sûr de vouloir supprimer?')"> <i class="mdi mdi-delete"></i></a>
-                    <a href="{% url 'print_recu' p.id %}"><i class="mdi mdi-table-edit"></i></a>
-                    <a href="{% url 'modifierPaiement' p.id %}"><i class="mdi mdi-table-edit"></i></a>
                     
+                    <a href="{% url 'modifierPaiement' p.id %}"><i class="mdi mdi-table-edit"></i></a>
+                    <a href="{% url 'print_recu' p.id %}"><i class="mdi mdi-printer"></i></a>
                 </td>
                
               </tr>
