@@ -43,8 +43,8 @@
                     <select class="js-example-basic-single" style="width:100%" name="sexe">
                     {% if aprenant %} {% else %} <option value="">--------------</option> {% endif %}
                     <option value="
-                    {% if aprenant.sexe == 'M' %} selected
-                    {% elif aprenant.sexe == 'F' %} selected
+                    {% if aprenant.sexe == 'M' %}M
+                    {% elif aprenant.sexe == 'F' %}F
                     {% endif %}
                     ">
                       {% if aprenant.sexe == 'M' %} HOMME
@@ -64,16 +64,14 @@
                     <select class="js-example-basic-single" style="width:100%" name="etatciv">
                     {% if aprenant %} {% else %} <option value="">--------------</option> {% endif %}
                     <option value="
-                    {% if aprenant.Etatcivil  == 'CELIBATAIRE' %} selected
-                      {% elif aprenant.Etatcivil  == 'MARIE'%} selected
-                      {% elif aprenant.Etatcivil  == 'VEUF'%} selected
-                      {% elif aprenant.Etatcivil  == 'VEUF'%} selected
-                      {% elif aprenant.Etatcivil  == 'DIVORCE'%} selected
+                    {% if aprenant.Etatcivil  == 'CELIBATAIRE' %} CELIBATAIRE
+                      {% elif aprenant.Etatcivil  == 'MARIE'%} MARIE
+                      {% elif aprenant.Etatcivil  == 'VEUF'%} VEUF
+                      {% elif aprenant.Etatcivil  == 'DIVORCE'%} DIVORCE
                       {% endif %}
                     ">
                       {% if aprenant.Etatcivil  == 'CELIBATAIRE' %} {{aprenant.Etatcivil}}
                       {% elif aprenant.Etatcivil  == 'MARIE'%} {{aprenant.Etatcivil}}
-                      {% elif aprenant.Etatcivil  == 'VEUF'%} {{aprenant.Etatcivil}}
                       {% elif aprenant.Etatcivil  == 'VEUF'%} {{aprenant.Etatcivil}}
                       {% elif aprenant.Etatcivil  == 'DIVORCE'%} {{aprenant.Etatcivil}}
                       {% endif %}

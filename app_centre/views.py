@@ -19,6 +19,10 @@ from cn_ngiya import settings
 # Create your views here.
 @login_required(login_url="sign_in")
 def home(request):
+    nbrhomme = 0
+    nbrFemme = 0
+    phomme  = 0
+    pfemme = 0
     nbrAprenant = Aprenant.objects.all().count()
     nbrFormateur = Formateur.objects.all().count()
     nbrFormation = Formateur.objects.all().count()
@@ -27,8 +31,10 @@ def home(request):
     formations = Formation.objects.all()
     utilisateurs = User.objects.all().count()
     
-    phomme = round((nbrhomme * 100 / nbrAprenant),1)
-    pfemme = round((nbrFemme * 100 / nbrAprenant),1)
+    if nbrhomme > 0:
+        phomme = round((nbrhomme * 100 / nbrAprenant),1)
+    if nbrFemme >0 :
+        pfemme = round((nbrFemme * 100 / nbrAprenant),1)
    
     data = []
     
@@ -110,6 +116,34 @@ def matiere(request):
         'pages':pages
     }
     return render(request,'page/matiere.html',ctx)
+
+
+@login_required(login_url="sign_in")
+def session(request):
+    sessions = len(SessionFormation.objects.all())
+    if request.method == "POST":
+        rech = request.POST['rech']
+        p = Paginator(SessionFormation.objects.filter(designation__contains=rech) |
+        SessionFormation.objects.filter(dateDebut__contains=rech) )
+        page = request.GET.get('page')
+        pages =p.get_page(page)
+        compte = len(pages)
+        if rech == '':
+             compte = len(SessionFormation.objects.all())  
+        
+    else:
+        p = Paginator(SessionFormation.objects.all(), 20)
+        page = request.GET.get('page')
+        pages =p.get_page(page)
+        compte = len(SessionFormation.objects.all())
+    ctx = {
+        'compte' : compte,
+        'sessions' : pages,
+        'lsession': 'active',
+        'pages':pages
+    }
+    return render(request,'page/session.html',ctx)
+
 
 @login_required(login_url="sign_in")
 def formateur(request):
@@ -414,9 +448,8 @@ def addpaiement(request):
                 paie.save()
                 msk = "Traitement ok"
                 #print("aaaaaaaaa",msk)
-                #return HttpResponseRedirect('/paie/')
-                frs = Frais.objects.all()
-                apr = Aprenant.objects.all()
+                return HttpResponseRedirect('/paie/')
+                
         
             
     return render(request,'formulaire/FPaiement.html',{'msg':msg,'frs': frs,'apr': apr,'msk':msk})
@@ -449,7 +482,7 @@ def addMatiere(request):
             )
             mt.save()
             msok = "Traitement ok"
-            #return HttpResponseRedirect('/matiere/')
+            return HttpResponseRedirect('/matiere/')
     ctx ={
         'msg':msg,
         'msok': msok
@@ -527,7 +560,7 @@ def addAprenant(request):
             )
             apr.save()
             mesok = nom + " "+postnom+" est inscrit avec succès"
-            #return HttpResponseRedirect('/aprenant/')
+            return HttpResponseRedirect('/aprenant/')
     ctx ={
         'msg':msg,
         'mesok': mesok 
@@ -794,7 +827,7 @@ def addFormation(request):
         if formation =='':
             msg = "Veuillez choisir la formation"
         elif  matiere=='':
-            msg="Veuillez choisir formation"
+            msg="Veuillez choisir la matiere"
         elif  formation=='':
             msg="Veuillez choisir formation"
        
@@ -890,6 +923,13 @@ def flocal(request):
     
     return render(request,'formulaire/FLocal.html')
 
+##Formulaire Local
+@login_required(login_url="sign_in")
+def fsession(request):
+    
+    
+    return render(request,'formulaire/FSession.html')
+
 ##ADD MATIERES
 @login_required(login_url="sign_in")
 def addLocal(request):
@@ -911,12 +951,45 @@ def addLocal(request):
             )
             loc.save()
             msok ="Traitement ok"
-            #return HttpResponseRedirect('/matiere/')
+            return HttpResponseRedirect('/local/')
     ctx ={
         'msg':msg,
         'msok': msok 
     }
     return render(request,'formulaire/FLocal.html',ctx)
+
+##ADD SESSION
+@login_required(login_url="sign_in")
+def addSession(request):
+   
+    if request.method == 'POST':
+        msg = None
+        msok = None
+        designat = request.POST.get("designation",None)
+        dateD = request.POST.get("dateDebut",None)
+        dateF = request.POST.get("dateFin",None)
+        
+        if designat == '':
+            msg ="Veuillez remplir la désignation"
+        elif dateD == '':
+            msg ="Veuillez remplir la date début"
+            
+        elif dateF == '':
+            msg ="Veuillez remplir la date de la fin"
+        else:
+            session = SessionFormation(
+                designation = designat.upper(),
+                dateDebut = dateD,
+                dateFin = dateF
+            )
+            session.save()
+            msok ="Traitement ok"
+            return HttpResponseRedirect('/session/')
+    ctx ={
+        'msg':msg,
+        'msok': msok 
+    }
+    return render(request,'formulaire/FSession.html',ctx)
 
 ##Formulaire Formation
 @login_required(login_url="sign_in")
@@ -945,7 +1018,7 @@ def addFormation(request):
             )
             form.save()
             msok ="Traitement ok"
-            #return HttpResponseRedirect('/matiere/')
+            return HttpResponseRedirect('/formation/')
     ctx ={
         'msg':msg,
         'msok': msok 
@@ -982,7 +1055,7 @@ def addFrais(request):
             )
             fr.save()
             msok ="Traitement ok"
-            #return HttpResponseRedirect('/matiere/')
+            return HttpResponseRedirect('/matiere/')
     ctx ={
         'msg':msg,
         'msok': msok 
@@ -1008,7 +1081,7 @@ def addFormateur(request):
         postnom = request.POST.get("postnom",None)
         prenom = request.POST.get("prenom",None)
         etatciv = request.POST.get("etatciv",None)
-        niveau = request.POST.get("niveauEtud",None)
+        niveau = request.POST.get("niveau",None)
         adresse = request.POST.get("adresse",None)
         email = request.POST.get("email",None)
         telephone  = request.POST.get("telephone",None)
@@ -1035,19 +1108,19 @@ def addFormateur(request):
         else:
             
             apr = Formateur(
-                nom = nom.upper(),
-                postnom = postnom.upper(),
-                prenom = prenom.upper(),
-                sexe = sexe.upper(),
-                Etatcivil = etatciv.upper(),
-                niveauEtude = niveau.upper(),
-                telephone = telephone.upper(),
-                email = email,
-                adresse = adresse.upper()
+                nom = nom.upper().strip(),
+                postnom = postnom.upper().strip(),
+                prenom = prenom.upper().strip(),
+                sexe = sexe.upper().strip(),
+                Etatcivil = etatciv.upper().strip(),
+                niveauEtude = niveau.upper().strip(),
+                telephone = telephone.upper().strip(),
+                email = email.strip(),
+                adresse = adresse.upper().strip()
             )
             apr.save()
             mesok = nom + " "+postnom+" est inscrit avec succès"
-            #return HttpResponseRedirect('/aprenant/')
+            return HttpResponseRedirect('/formateur/')
     ctx ={
         'msg':msg,
         'mesok': mesok 
@@ -1198,7 +1271,7 @@ def addUser(request):
             u.save()
             msok = username+ " est enregistré comme utiisateur"
             
-            #return HttpResponseRedirect('/detailFormateur'+formateur)
+            return HttpResponseRedirect('/detailFormateur'+formateur)
         
     return render(request,'formulaire/FUser.html',{'msg':msg,'msok':msok,'pro':profiles})
 
@@ -1245,6 +1318,13 @@ def deletePaie(request,id):
     p = Paiement.objects.get(pk=id)
     p.delete()
     return HttpResponseRedirect('/paie/')
+
+#Delete paie
+@login_required(login_url="sign_in")
+def deleteSession(request,id):
+    p = SessionFormation.objects.get(pk=id)
+    p.delete()
+    return HttpResponseRedirect('/session/')
 
 #Delete paie
 @login_required(login_url="sign_in")
@@ -1430,7 +1510,8 @@ def updateAprenant(request,id):
         email = request.POST.get("email",None)
         telephone  = request.POST.get("telephone",None)
         sexe  = request.POST.get("sexe",None)
-     
+       
+        print(sexe.strip())
         if nom == '':
             msg ="Veuillez remplir le nom"
         elif postnom == '':
@@ -1461,17 +1542,18 @@ def updateAprenant(request,id):
             aprenant.prenom = prenom.upper()
             aprenant.lieunaissance = lieu.upper()
             aprenant.datenaissance = datenais
-            aprenant.sexe = sexe.upper()
-            aprenant.Etatcivil = etatciv.upper()
-            aprenant.niveauEtude = niveau.upper()
+            aprenant.sexe = sexe.upper().strip()
+            aprenant.Etatcivil = etatciv.upper().strip()
+            aprenant.niveauEtude = niveau.upper().strip()
             aprenant.telephone = telephone.upper()
             aprenant.email = email
-            aprenant.langue = langue.upper()
+            aprenant.langue = langue.upper().strip()
             aprenant.adresse = adresse.upper()
-            
+           
             aprenant.save()
+            
             mesok = nom + " "+postnom+" modifié avec succès"
-            #return HttpResponseRedirect('/aprenant/')
+            return HttpResponseRedirect('/aprenant/')
     ctx ={
         'msg':msg,
         'mesok': mesok 
@@ -1511,7 +1593,7 @@ def updateMatiere(request,id):
             
            matiere.save()
            msok = designation +" modifié avec succès"
-            #return HttpResponseRedirect('/aprenant/')
+           return HttpResponseRedirect('/matiere/')
     ctx ={
         'msg':msg,
         'msok': msok 
@@ -1568,19 +1650,19 @@ def updateFormateur(request,id):
         elif sexe == '':
             msg ="Veuillez remplir le sexe"
         else:     
-            formateur.nom = nom.upper()
-            formateur.postnom = postnom.upper()
-            formateur.prenom = prenom.upper()
-            formateur.sexe = sexe.upper()
-            formateur.Etatcivil = etatciv.upper()
-            formateur.niveauEtude = niveau.upper()
-            formateur.telephone = telephone.upper()
-            formateur.email = email
-            formateur.adresse = adresse.upper()
+            formateur.nom = nom.upper().strip()
+            formateur.postnom = postnom.upper().strip()
+            formateur.prenom = prenom.upper().strip()
+            formateur.sexe = sexe.upper().strip()
+            formateur.Etatcivil = etatciv.upper().strip()
+            formateur.niveauEtude = niveau.upper().strip()
+            formateur.telephone = telephone.upper().strip()
+            formateur.email = email.strip()
+            formateur.adresse = adresse.upper().strip()
             
             formateur.save()
             mesok = nom + " "+postnom+" est modifié  avec succès"
-            #return HttpResponseRedirect('/aprenant/')
+            return HttpResponseRedirect('/formateur/')
     ctx ={
         'formateur':formateur,
         'msg':msg,
@@ -1621,7 +1703,7 @@ def updateFrais(request,id):
             frais.cout = cout
             frais.save()
             msok ="Traitement ok"
-            #return HttpResponseRedirect('/matiere/')
+            return HttpResponseRedirect('/matiere/')
     ctx ={
         'frais': frais,
         'msg':msg,
@@ -1660,7 +1742,7 @@ def updateFormation(request,id):
             formation.duree = duree.upper()
             formation.save()
             msok ="Traitement ok"
-            #return HttpResponseRedirect('/matiere/')
+            return HttpResponseRedirect('/formation/')
     ctx ={
         'msg':msg,
         'msok': msok 
@@ -1677,11 +1759,21 @@ def modifierLocal(request,id):
     }
     return render(request,'formulaire/FLocal.html',ctx)
 
+##LOCAL
+@login_required(login_url="sign_in")
+def modifierSesion(request,id):
+    session = SessionFormation.objects.get(pk=id)
+    
+    ctx ={
+        'session': session
+    }
+    return render(request,'formulaire/FSession.html',ctx)
+
 
 ##UPDATE LOCAL
 @login_required(login_url="sign_in")
 def updateLocal(request,id):
-    local = Local.objects.get(id=id)
+    local = Local.objects.get(pk=id)
     if request.method == 'POST':
         msg = None
         msok = None
@@ -1698,12 +1790,42 @@ def updateLocal(request,id):
             local.capacite = cap
             local.save()
             msok ="Traitement ok"
-            #return HttpResponseRedirect('/matiere/')
+            return HttpResponseRedirect('/local/')
     ctx ={
         'msg':msg,
         'msok': msok 
     }
     return render(request,'formulaire/FLocal.html',ctx)
+
+@login_required(login_url="sign_in")
+def updateSession(request,id):
+    session = SessionFormation.objects.get(pk=id)
+    if request.method == 'POST':
+        msg = None
+        msok = None
+        designat = request.POST.get("designation",None)
+        dateD = request.POST.get("dateDebut",None)
+        dateF = request.POST.get("dateFin",None)
+        
+        if designat == '':
+            msg ="Veuillez remplir la désignation"
+        elif dateD == '':
+            msg ="Veuillez remplir la date début"
+        elif dateF == '':
+            msg ="Veuillez remplir la date Fin"
+        else:
+            
+            session.designation = designat.upper()
+            session.dateDebut = dateD
+            session.dateFin = dateF
+            session.save()
+            msok ="Traitement ok"
+            return HttpResponseRedirect('/session/')
+    ctx ={
+        'msg':msg,
+        'msok': msok 
+    }
+    return render(request,'formulaire/FSession.html',ctx)
 
 ##PRESENCE
 @login_required(login_url="sign_in")
@@ -1842,7 +1964,7 @@ def updatePaiement(request,id):
                 msk = "Traitement ok"
                 frs = Frais.objects.all()
                 apr = Aprenant.objects.all()
-                #return HttpResponseRedirect('/paie/')
+                return HttpResponseRedirect('/paie/')
         
             
     return render(request,'formulaire/FPaiement.html',{'msg':msg,'paiement':paiement,'frs': frs,'apr': apr,'msk':msk})
@@ -1912,7 +2034,7 @@ def updateUser(request,id):
             user.save()
             msok = username+ " a été modifié"
             
-            #return HttpResponseRedirect('/detailFormateur'+formateur)
+            return HttpResponseRedirect('/users/')
         
     return render(request,'formulaire/FUser.html',{'msg':msg,'msok':msok,'pro':profiles})
 

@@ -23,8 +23,9 @@
             <div class="col-6">
               <div class="form-group">
                     <label for="exampleInputCity1">Durée de la formation</label>
-                    <input type="text" value = {{formation.duree}} style="color:white" class="form-control" id="exampleInputCity1" placeholder="Durée formation" name="duree">
-                </div>
+                    <input type="text" value="{{formation.duree}}" style="color:white" class="form-control" id="exampleInputCity1" placeholder="Désignation" name="duree">
+              </div>
+              
               {% if msg %}
                     <script>
                           Swal.fire({

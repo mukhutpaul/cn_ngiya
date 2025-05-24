@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app_centre.views import addAprenant, addDetailAprenant, addDetailFormateur, addDetailFormation, addDetailPresence, addFormateur, addFormation, addFrais, addLocal, addMatiere, addUser, addpaiement, addpresence, aprenant, deleteAprenant, deleteFormateur, deleteFormation, deleteFrais, deleteLocal, deleteMatiere, deletePaie, deletePresence, deleteUser, deletedetailAprenant, deletedetailFormateur, deletedetailFormation, deletedetailPresence, detaiPresence, detailAprenant, detailFormateur, detailFormation, fAprenant, fFormateur, fFormation, fFrais, fUser, flocal, fmatiere, formateur, formation, fpaiement, fpresence, frais, home, local, log_out, login, matiere, modifierAprenant, modifierFormateur, modifierFormation, modifierFrais, modifierLocal, modifierMatiere, modifierPaiement, modifierPresence, modifierUser, paiement, presence, print_recu, sign_in, statistiquePresence, updateAprenant, updateFormateur, updateFormation, updateFrais, updateLocal, updateMatiere, updatePaiement, updatePresence, updateUser, users
+from app_centre.views import addAprenant, addDetailAprenant, addDetailFormateur, addDetailFormation, addDetailPresence, addFormateur, addFormation, addFrais, addLocal, addMatiere, addSession, addUser, addpaiement, addpresence, aprenant, deleteAprenant, deleteFormateur, deleteFormation, deleteFrais, deleteLocal, deleteMatiere, deletePaie, deletePresence, deleteSession, deleteUser, deletedetailAprenant, deletedetailFormateur, deletedetailFormation, deletedetailPresence, detaiPresence, detailAprenant, detailFormateur, detailFormation, fAprenant, fFormateur, fFormation, fFrais, fUser, flocal, fmatiere, formateur, formation, fpaiement, fpresence, frais, fsession, home, local, log_out, login, matiere, modifierAprenant, modifierFormateur, modifierFormation, modifierFrais, modifierLocal, modifierMatiere, modifierPaiement, modifierPresence, modifierSesion, modifierUser, paiement, presence, print_recu, session, sign_in, statistiquePresence, updateAprenant, updateFormateur, updateFormation, updateFrais, updateLocal, updateMatiere, updatePaiement, updatePresence, updateSession, updateUser, users
 
 
 urlpatterns = [
@@ -96,13 +96,20 @@ urlpatterns = [
    path('fUser/',fUser, name="fUser"),
    path('addUser/',addUser, name="addUser"),
    
+   path('session/',session, name="session"),
+   path('fsession/',fsession, name="fsession"),
+   path('addSession/',addSession, name="addSession"),
+   path('updateSession<int:id>/',updateSession, name="updateSession"),
+   
+
    ##STATISTIQUES PRESENCES
    path('statistiquePresence<int:id>/',statistiquePresence, name="statistiquePresence"),
    
    ##SUPPRESSION
    #Delete paie
    path('deletePaie<int:id>/',deletePaie, name="deletePaie"),
-   #Delete Aprenant
+   #Delete session
+   path('deleteSession<int:id>/',deleteSession, name="deleteSession"),
    
    #Delete Formation
    path('deleteFormation<int:id>/',deleteFormation, name="deleteFormation"),
@@ -127,6 +134,7 @@ urlpatterns = [
    #Delete users
    path('deleteUser<int:id>/',deleteUser, name="deleteUser"),
    
+   
    path('deletedetailFormation<int:id>/',deletedetailFormation, name="deletedetailFormation"),
    path('deletedetailPresence<int:id>/',deletedetailPresence, name="deletedetailPresence"),
    path('deletedetailFormateur<int:id>/',deletedetailFormateur, name="deletedetailFormateur"),
@@ -138,8 +146,10 @@ urlpatterns = [
    path('modifierAprenant<int:id>/',modifierAprenant, name="modifierAprenant"),
    path('updateAprenant<int:id>/',updateAprenant, name="updateAprenant"),
    
-   path('modifierFormateur<int:id>/',modifierFormateur, name="modifierAprenant"),
+   path('modifierFormateur<int:id>/',modifierFormateur, name="modifierFormateur"),
    path('updateFormateur<int:id>/',updateFormateur, name="updateFormateur"),
+   
+   path('modifierSesion<int:id>/',modifierSesion, name="modifierSesion"),
    
    path('modifierFrais<int:id>/',modifierFrais, name="modifierFrais"),
    path('updateFrais<int:id>/',updateFrais, name="updateFrais"),

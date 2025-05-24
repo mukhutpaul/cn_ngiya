@@ -83,7 +83,6 @@ class SessionFormation(models.Model):
     designation = models.CharField(max_length=100,null=False)
     dateDebut = models.CharField(max_length=20,null=False)
     dateFin = models.CharField(max_length=20,null=False)
-    local = models.ForeignKey(Local, on_delete=models.DO_NOTHING)
     createdat = models.DateTimeField(auto_now=True)
     
     def __str__(self):
